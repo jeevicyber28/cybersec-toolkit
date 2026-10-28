@@ -3,13 +3,32 @@
 {% block title %}QR Phishing (Quishing) Scanner &bull; CyberSec Toolkit{% endblock %}
 
 {% block content %}
-<div style="max-width: 850px; margin: 0 auto;">
-  <div style="margin-bottom: 2rem;">
-    <span class="badge badge-warning" style="margin-bottom: 0.5rem;">Defensive Quishing Mitigation &bull; Zero Auto-Redirect</span>
-    <h1 style="font-size: 2.2rem; font-weight: 800;">QR Phishing (Quishing) Scanner</h1>
-    <p style="color: var(--text-muted); font-size: 1rem;">
-      Decodes QR codes server-side in a secure sandbox, inspects the decoded destination payload, and evaluates it against our phishing detector without ever auto-opening the link.
+<div style="max-width: 900px; margin: 0 auto;">
+  <div class="page-header">
+    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+      <span class="badge badge-warning">Anti-Quishing Sandbox</span>
+      <span class="badge badge-info">Zero Auto-Open</span>
+    </div>
+    <h1 class="page-title">QR Phishing (Quishing) Scanner</h1>
+    <p class="page-subtitle">
+      Decodes physical and digital QR codes in an isolated server environment, previews destination payloads safely, and executes machine learning phishing defense.
     </p>
+  </div>
+
+  <!-- Tools Quick Switcher Subnav Strip -->
+  <div class="tools-subnav">
+    <a href="{{ url_for('url_scanner.index') }}" class="tools-subnav-btn">
+      <span>🔗</span> URL Phish Scanner
+    </a>
+    <a href="{{ url_for('email_analyzer.index') }}" class="tools-subnav-btn">
+      <span>✉️</span> Email Analyzer
+    </a>
+    <a href="{{ url_for('qr_scanner.index') }}" class="tools-subnav-btn active">
+      <span>📷</span> Quishing (QR) Scanner
+    </a>
+    <a href="{{ url_for('password_checker.index') }}" class="tools-subnav-btn">
+      <span>🔑</span> Password &amp; Breach Audit
+    </a>
   </div>
 
   <!-- Upload Card -->
@@ -18,7 +37,7 @@
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
       <div class="form-group">
-        <label class="form-label" for="qr_image">Upload QR Code Image (PNG, JPG, WEBP, BMP)</label>
+        <label class="form-label" for="qr_image">Upload QR Code Matrix (PNG, JPG, WEBP, BMP)</label>
         <input type="file" id="qr_image" name="qr_image" class="form-control" accept="image/*">
       </div>
 
@@ -27,14 +46,14 @@
           📷 Upload &amp; Inspect QR Code
         </button>
 
-        <!-- Test with Samples -->
-        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
-          <span>Or test sample:</span>
-          <button type="submit" name="sample_choice" value="safe" class="btn btn-secondary btn-sm">
-            ✅ Test Safe QR
+        <!-- Test with Samples Chips -->
+        <div class="chip-container" style="margin-top: 0;">
+          <span class="chip-label">Test Samples:</span>
+          <button type="submit" name="sample_choice" value="safe" class="chip-btn">
+            ✅ Test Authentic QR
           </button>
-          <button type="submit" name="sample_choice" value="phish" class="btn btn-secondary btn-sm">
-            🚨 Test Phishing QR
+          <button type="submit" name="sample_choice" value="phish" class="chip-btn">
+            🚨 Test Malicious QR
           </button>
         </div>
       </div>
@@ -43,7 +62,7 @@
 
   <!-- Results Card -->
   {% if result %}
-  <div class="card" style="margin-bottom: 2.5rem; border-top: 5px solid {% if result.verdict == 'Safe' or 'Safe' in result.verdict %}#10b981{% elif result.verdict == 'Suspicious' %}#f59e0b{% elif result.success == false %}#94a3b8{% else %}#ef4444{% endif %};">
+  <div class="card" style="margin-bottom: 2.5rem; border-top: 5px solid {% if result.verdict == 'Safe' or 'Safe' in result.verdict %}var(--accent-emerald){% elif result.verdict == 'Suspicious' %}var(--accent-amber){% elif result.success == false %}var(--text-muted){% else %}var(--accent-rose){% endif %};">
     {% if not result.success %}
       <div class="alert alert-warning" style="margin-bottom: 0;">
         ⚠️ {{ result.error }}
@@ -51,46 +70,46 @@
     {% else %}
       <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
         <div>
-          <span class="badge badge-{{ result.verdict_class }}" style="font-size: 1rem; padding: 0.4rem 1rem; margin-bottom: 0.5rem;">
+          <span class="badge badge-{{ result.verdict_class }}" style="font-size: 0.9rem; padding: 0.4rem 1rem; margin-bottom: 0.5rem;">
             {{ result.verdict }}
           </span>
-          <h2 style="font-size: 1.3rem; font-weight: 700; margin-top: 0.4rem;">
-            QR Payload Assessment
+          <h2 style="font-size: 1.35rem; font-weight: 800; margin-top: 0.4rem; color: var(--text-main);">
+            QR Destination Assessment
           </h2>
         </div>
         <div style="text-align: right;">
-          <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Risk Score</span>
-          <div style="font-size: 2.8rem; font-weight: 800; line-height: 1; color: {% if result.risk_score < 35 %}#10b981{% elif result.risk_score < 65 %}#f59e0b{% else %}#ef4444{% endif %};">
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Risk Index</span>
+          <div style="font-size: 3rem; font-weight: 800; line-height: 1; color: {% if result.risk_score < 35 %}var(--accent-emerald){% elif result.risk_score < 65 %}var(--accent-amber){% else %}var(--accent-rose){% endif %}; margin-top: 0.2rem;">
             {{ result.risk_score }}<span style="font-size: 1.2rem; color: var(--text-muted); font-weight: 500;">/100</span>
           </div>
         </div>
       </div>
 
       <!-- Educational Quarantine Box: Decoded URL Display BEFORE verdict -->
-      <div style="background: var(--bg-card-hover); border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-          <span style="font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+      <div style="background: var(--bg-surface-elevated); border: 2px dashed var(--border-subtle); border-radius: var(--radius-sm); padding: 1.5rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+          <span style="font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted);">
             🔒 Decoded QR Destination (Quarantined)
           </span>
-          <span class="badge badge-info" style="font-size: 0.75rem;">Never Auto-Opened</span>
+          <span class="badge badge-info" style="font-size: 0.7rem;">Never Auto-Opened</span>
         </div>
-        <div style="font-family: monospace; font-size: 1.1rem; word-break: break-all; background: var(--bg-primary); padding: 0.8rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: all;">
+        <div style="font-family: var(--font-mono); font-size: 1.05rem; word-break: break-all; background: var(--bg-app); padding: 0.85rem 1.15rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); user-select: all; color: var(--text-main);">
           {{ result.decoded_url }}
         </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.6rem;">
-          🛡️ <b>Defensive Safety Rule:</b> Never scan physical stickers or unsolicited email QR codes without verifying destination domains. Attackers exploit mobile auto-open prompts to bypass email gateways.
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem;">
+          🛡️ <b>Defensive Safety Rule:</b> Attackers exploit mobile browsers that auto-open QR links to bypass enterprise firewall and DNS filters. Never scan unverified stickers or unsolicited physical vouchers.
         </p>
       </div>
 
       <!-- Explainable Features if URL -->
       {% if result.is_url and result.top_contributions %}
-        <h4 style="font-weight: 700; margin-bottom: 0.75rem;">Contributing Risk Factors:</h4>
+        <h4 style="font-weight: 700; margin-bottom: 0.75rem;">Observed Contributing Risk Factors:</h4>
         <div style="display: flex; flex-direction: column; gap: 0.6rem;">
           {% for item in result.top_contributions %}
-            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; background: var(--bg-card-hover); padding: 0.6rem 0.9rem; border-radius: var(--radius-sm);">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; background: var(--bg-surface-elevated); padding: 0.65rem 1rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle);">
               <span><b>{{ item.label }}:</b> <code>{{ item.value }}</code></span>
-              <span style="font-weight: 600; color: {% if item.direction == 'reduces_risk' %}#10b981{% else %}#ef4444{% endif %};">
-                {{ '+ ' ~ item.impact ~ '% Risk' if item.impact > 0 else 'Legitimate signal' }}
+              <span style="font-weight: 700; color: {% if item.direction == 'reduces_risk' %}var(--accent-emerald){% else %}var(--accent-rose){% endif %};">
+                {{ '+ ' ~ item.impact ~ '% Risk' if item.impact > 0 else 'Legitimate indicator' }}
               </span>
             </div>
           {% endfor %}
