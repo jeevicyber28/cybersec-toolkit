@@ -1,64 +1,165 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{% block title %}CyberSec Toolkit{% endblock %} &bull; Defensive Suite</title>
   
-  <!-- Inter Font -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <!-- Main Stylesheet with Cache Buster -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}?v=2.5">
   {% block extra_css %}{% endblock %}
 
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
-  <!-- Navigation Header -->
-  <header>
-    <nav class="navbar">
+  <!-- Enterprise Cybersecurity Top Navigation -->
+  <header class="app-header">
+    <div class="navbar-container">
+      <!-- Brand Logo -->
       <a href="{{ url_for('main.index') }}" class="nav-brand">
-        <span class="brand-icon">🛡️</span>
-        <span>CyberSec<span style="color: var(--color-primary);">Toolkit</span></span>
+        <div class="brand-shield">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="brand-name">
+          CyberSec<span class="brand-accent">Toolkit</span>
+        </div>
+        <span class="badge-version">v2.0</span>
       </a>
 
-      <ul class="nav-links">
-        <li><a href="{{ url_for('main.dashboard') }}" class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}">📊 Dashboard</a></li>
-        <li><a href="{{ url_for('url_scanner.index') }}" class="nav-link {% if request.endpoint == 'url_scanner.index' %}active{% endif %}">🔗 URL Phish</a></li>
-        <li><a href="{{ url_for('email_analyzer.index') }}" class="nav-link {% if request.endpoint == 'email_analyzer.index' %}active{% endif %}">✉️ Email Analyzer</a></li>
-        <li><a href="{{ url_for('qr_scanner.index') }}" class="nav-link {% if request.endpoint == 'qr_scanner.index' %}active{% endif %}">📷 Quishing</a></li>
-        <li><a href="{{ url_for('password_checker.index') }}" class="nav-link {% if request.endpoint == 'password_checker.index' %}active{% endif %}">🔑 Passwords</a></li>
-        <li><a href="{{ url_for('game.index') }}" class="nav-link {% if request.endpoint == 'game.index' %}active{% endif %}">🎮 Spot the Phish</a></li>
-        <li><a href="{{ url_for('main.model_info') }}" class="nav-link {% if request.endpoint == 'main.model_info' %}active{% endif %}">🧠 Model Info</a></li>
-        <li><a href="{{ url_for('history.index') }}" class="nav-link {% if request.endpoint == 'history.index' %}active{% endif %}">📜 History</a></li>
-        <li><a href="{{ url_for('api.docs') }}" class="nav-link {% if request.endpoint == 'api.docs' %}active{% endif %}">⚡ API Docs</a></li>
-      </ul>
+      <!-- Desktop Nav Menu -->
+      <nav class="nav-menu" id="desktopNav">
+        <!-- Dashboard -->
+        <a href="{{ url_for('main.dashboard') }}" class="nav-item {% if request.endpoint == 'main.dashboard' %}active{% endif %}">
+          <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>
+          <span>Dashboard</span>
+        </a>
 
+        <!-- Security Tools Dropdown -->
+        <div class="nav-dropdown" id="toolsDropdownWrapper">
+          <button type="button" class="nav-item dropdown-toggle {% if request.endpoint in ['url_scanner.index', 'email_analyzer.index', 'qr_scanner.index', 'password_checker.index'] %}active{% endif %}" id="toolsDropdownBtn" aria-expanded="false">
+            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/><path d="M12 15v2"/></svg>
+            <span>Security Tools</span>
+            <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="dropdown-panel" id="toolsDropdownMenu">
+            <div class="dropdown-header">ANALYZERS &amp; SCANNERS</div>
+            <a href="{{ url_for('url_scanner.index') }}" class="dropdown-item {% if request.endpoint == 'url_scanner.index' %}active{% endif %}">
+              <div class="dropdown-icon-box cyan">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              </div>
+              <div class="dropdown-text">
+                <div class="dropdown-title">URL Phish Scanner</div>
+                <div class="dropdown-desc">16-feature Explainable Random Forest ML</div>
+              </div>
+            </a>
+            <a href="{{ url_for('email_analyzer.index') }}" class="dropdown-item {% if request.endpoint == 'email_analyzer.index' %}active{% endif %}">
+              <div class="dropdown-icon-box purple">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </div>
+              <div class="dropdown-text">
+                <div class="dropdown-title">Email Journey Analyzer</div>
+                <div class="dropdown-desc">SPF/DKIM/DMARC auth &amp; MTA hop timeline</div>
+              </div>
+            </a>
+            <a href="{{ url_for('qr_scanner.index') }}" class="dropdown-item {% if request.endpoint == 'qr_scanner.index' %}active{% endif %}">
+              <div class="dropdown-icon-box amber">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </div>
+              <div class="dropdown-text">
+                <div class="dropdown-title">Quishing (QR) Scanner</div>
+                <div class="dropdown-desc">OpenCV server decode &amp; safe quarantine preview</div>
+              </div>
+            </a>
+            <a href="{{ url_for('password_checker.index') }}" class="dropdown-item {% if request.endpoint == 'password_checker.index' %}active{% endif %}">
+              <div class="dropdown-icon-box emerald">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <div class="dropdown-text">
+                <div class="dropdown-title">Password &amp; Breach Audit</div>
+                <div class="dropdown-desc">Client SHA-1 + k-anonymity HIBP range check</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Spot the Phish Game -->
+        <a href="{{ url_for('game.index') }}" class="nav-item {% if request.endpoint == 'game.index' %}active{% endif %}">
+          <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="6 3 18 3 18 8 6 8 6 3"/><polygon points="6 16 18 16 18 21 6 21 6 16"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Spot the Phish</span>
+        </a>
+
+        <!-- Explainable ML Model Info -->
+        <a href="{{ url_for('main.model_info') }}" class="nav-item {% if request.endpoint == 'main.model_info' %}active{% endif %}">
+          <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span>Model Info</span>
+        </a>
+
+        <!-- Scan History & PDF Export -->
+        <a href="{{ url_for('history.index') }}" class="nav-item {% if request.endpoint == 'history.index' %}active{% endif %}">
+          <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+          <span>History</span>
+        </a>
+
+        <!-- REST API Docs -->
+        <a href="{{ url_for('api.docs') }}" class="nav-item {% if request.endpoint == 'api.docs' %}active{% endif %}">
+          <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>API Docs</span>
+        </a>
+      </nav>
+
+      <!-- Right Actions: Theme Toggle & User Auth -->
       <div class="nav-actions">
         <!-- Theme Toggle -->
         <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Theme (Dark / Light)">
-          <span id="themeIcon">🌙</span>
-          <span id="themeText" style="font-size: 0.85rem; font-weight: 600;">Dark</span>
+          <span id="themeIcon">☀️</span>
+          <span id="themeText">Light</span>
         </button>
 
         {% if current_user.is_authenticated %}
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span class="badge badge-purple" title="Auditor Account">👤 {{ current_user.username }}</span>
+          <div class="auth-box">
+            <span class="user-badge" title="Logged in Auditor">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              {{ current_user.username }}
+            </span>
             <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-sm">Logout</a>
           </div>
         {% else %}
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div class="auth-box">
             <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-sm">Login</a>
             <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">Register</a>
           </div>
         {% endif %}
+
+        <!-- Mobile Hamburger Button -->
+        <button type="button" class="mobile-toggle-btn" id="mobileMenuBtn" aria-label="Toggle Navigation">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
       </div>
-    </nav>
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div class="mobile-drawer" id="mobileDrawer">
+      <a href="{{ url_for('main.dashboard') }}" class="mobile-nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}">📊 Dashboard</a>
+      <div class="mobile-drawer-label">SECURITY SCANNERS</div>
+      <a href="{{ url_for('url_scanner.index') }}" class="mobile-nav-link {% if request.endpoint == 'url_scanner.index' %}active{% endif %}">🔗 URL Phish Scanner</a>
+      <a href="{{ url_for('email_analyzer.index') }}" class="mobile-nav-link {% if request.endpoint == 'email_analyzer.index' %}active{% endif %}">✉️ Email Analyzer</a>
+      <a href="{{ url_for('qr_scanner.index') }}" class="mobile-nav-link {% if request.endpoint == 'qr_scanner.index' %}active{% endif %}">📷 Quishing (QR) Scanner</a>
+      <a href="{{ url_for('password_checker.index') }}" class="mobile-nav-link {% if request.endpoint == 'password_checker.index' %}active{% endif %}">🔑 Password &amp; Breach Audit</a>
+      <div class="mobile-drawer-label">AWARENESS &amp; SYSTEM</div>
+      <a href="{{ url_for('game.index') }}" class="mobile-nav-link {% if request.endpoint == 'game.index' %}active{% endif %}">🎮 Spot the Phish Game</a>
+      <a href="{{ url_for('main.model_info') }}" class="mobile-nav-link {% if request.endpoint == 'main.model_info' %}active{% endif %}">🧠 ML Model Info</a>
+      <a href="{{ url_for('history.index') }}" class="mobile-nav-link {% if request.endpoint == 'history.index' %}active{% endif %}">📜 Scan History</a>
+      <a href="{{ url_for('api.docs') }}" class="mobile-nav-link {% if request.endpoint == 'api.docs' %}active{% endif %}">⚡ REST API Docs</a>
+    </div>
   </header>
 
   <!-- Main Content Container -->
@@ -82,18 +183,18 @@
 
   <!-- Educational Footer -->
   <footer class="footer">
-    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div style="max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
       <div>
-        <b>CyberSec Toolkit</b> &bull; Defensive & Educational Cybersecurity Suite
+        <b>CyberSec Toolkit</b> &bull; Advanced Defensive Cybersecurity Suite v2.0
       </div>
       <div>
-        <span>Zero-Knowledge &bull; K-Anonymity Verified &bull; Explainable ML Engine</span>
+        <span>Zero-Knowledge HIBP &bull; Explainable Random Forest &bull; Isolated Quishing Sandbox</span>
       </div>
     </div>
   </footer>
 
   <!-- Scripts -->
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}?v=2.5"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>
