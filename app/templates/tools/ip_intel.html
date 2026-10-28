@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}IP Threat Intelligence &amp; DNS Recon &bull; CyberSec Toolkit{% endblock %}
+
+{% block content %}
+<div style="max-width: 1050px; margin: 0 auto;">
+  <div class="page-header">
+    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+      <span class="badge badge-info">Threat Intelligence</span>
+      <span class="badge badge-purple">Geo-IP &bull; ASN &bull; DNS Recon</span>
+    </div>
+    <h1 class="page-title">IP Threat Intelligence &amp; DNS Reconnaissance</h1>
+    <p class="page-subtitle">
+      Inspect IP address ranges, RFC 1918 classification, Reverse DNS (PTR) lookups, Geo-IP locations, autonomous systems (ASN), and dynamic DNS threat markers.
+    </p>
+  </div>
+
+  <!-- Tools Quick Switcher Subnav Strip -->
+  <div class="tools-subnav">
+    <a href="{{ url_for('url_scanner.index') }}" class="tools-subnav-btn">
+      <span>🔗</span> URL Phish
+    </a>
+    <a href="{{ url_for('email_analyzer.index') }}" class="tools-subnav-btn">
+      <span>✉️</span> Email Analyzer
+    </a>
+    <a href="{{ url_for('qr_scanner.index') }}" class="tools-subnav-btn">
+      <span>📷</span> Quishing (QR)
+    </a>
+    <a href="{{ url_for('password_checker.index') }}" class="tools-subnav-btn">
+      <span>🔑</span> Passwords
+    </a>
+    <a href="{{ url_for('ssl_headers.index') }}" class="tools-subnav-btn">
+      <span>🛡️</span> SSL &amp; Headers
+    </a>
+    <a href="{{ url_for('port_scanner.index') }}" class="tools-subnav-btn">
+      <span>🔌</span> Port Audit
+    </a>
+    <a href="{{ url_for('ip_intel.index') }}" class="tools-subnav-btn active">
+      <span>🌍</span> IP Intel
+    </a>
+    <a href="{{ url_for('hash_studio.index') }}" class="tools-subnav-btn">
+      <span>⚡</span> Hash Studio
+    </a>
+    <a href="{{ url_for('playbook.index') }}" class="tools-subnav-btn">
+      <span>📘</span> Defense Playbook
+    </a>
+  </div>
+
+  <!-- Search Card -->
+  <div class="card" style="margin-bottom: 2rem;">
+    <form method="POST" action="{{ url_for('ip_intel.index') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="form-group">
+        <label class="form-label" for="query">Target IP Address or Hostname</label>
+        <div style="display: flex; gap: 0.6rem;">
+          <input type="text" id="query" name="query" class="form-control"
+                 placeholder="e.g. 8.8.8.8, 1.1.1.1, or github.com"
+                 value="{{ query_input }}" required autofocus>
+          <button type="submit" class="btn btn-primary" style="white-space: nowrap; padding: 0 1.6rem;">
+            🔍 Analyze Threat Intel
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Chips -->
+    <div class="chip-container">
+      <span class="chip-label">Quick Lookups:</span>
+      <button type="button" class="chip-btn" onclick="document.getElementById('query').value='8.8.8.8';">
+        Google DNS (8.8.8.8)
+      </button>
+      <button type="button" class="chip-btn" onclick="document.getElementById('query').value='1.1.1.1';">
+        Cloudflare (1.1.1.1)
+      </button>
+      <button type="button" class="chip-btn" onclick="document.getElementById('query').value='127.0.0.1';">
+        Loopback (127.0.0.1)
+      </button>
+      <button type="button" class="chip-btn" onclick="document.getElementById('query').value='192.168.1.1';">
+        Private (192.168.1.1)
+      </button>
+    </div>
+  </div>
+
+  {% if result and not result.error %}
+  <!-- Target Header -->
+  <div class="card" style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="badge {% if result.is_global %}badge-info{% elif result.is_loopback %}badge-purple{% else %}badge-warning{% endif %}" style="margin-bottom: 0.5rem;">
+          {{ result.classification }}
+        </span>
+        <h2 style="font-size: 1.5rem; font-family: var(--font-mono); font-weight: 800; color: var(--text-main);">
+          {{ result.ip }}
+        </h2>
+        <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">
+          Query: <code>{{ result.query }}</code> &bull; Version: IPv{{ result.ip_version }}
+        </div>
+      </div>
+
+      <div style="text-align: right;">
+        <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">
+          Reverse DNS (PTR)
+        </span>
+        <div style="font-family: var(--font-mono); font-weight: 600; font-size: 0.95rem; color: var(--accent-primary); margin-top: 0.2rem;">
+          {{ result.reverse_dns or 'None' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Risk Indicators if any -->
+  {% if result.risk_indicators %}
+  <div class="alert alert-warning" style="margin-bottom: 2rem; display: block;">
+    <b>⚠️ Threat Signal Warnings:</b>
+    <ul style="margin: 0.5rem 0 0 1.5rem; font-size: 0.85rem;">
+      {% for ri in result.risk_indicators %}
+        <li>{{ ri }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Grid: Geo-IP & DNS -->
+  <div class="grid-2">
+    <!-- Geo-IP & ASN Card -->
+    <div class="card">
+      <h3 class="card-title" style="margin-bottom: 1.25rem;">📍 Geolocation &amp; Autonomous System</h3>
+      {% if result.geo_info and result.geo_info.country %}
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.88rem;">
+        <div>
+          <span style="color: var(--text-muted);">Country &amp; City:</span>
+          <div style="font-weight: 700; color: var(--text-main); font-size: 1rem;">
+            {{ result.geo_info.city }}, {{ result.geo_info.region }}, {{ result.geo_info.country }} ({{ result.geo_info.country_code }})
+          </div>
+        </div>
+
+        <div>
+          <span style="color: var(--text-muted);">ISP / Organization:</span>
+          <div style="font-weight: 600; color: var(--text-main);">
+            {{ result.geo_info.isp or result.geo_info.org or 'Unknown Provider' }}
+          </div>
+        </div>
+
+        <div>
+          <span style="color: var(--text-muted);">Autonomous System (ASN):</span>
+          <div style="font-family: var(--font-mono); font-weight: 600; color: var(--accent-primary);">
+            {{ result.geo_info.asn or 'Unassigned' }}
+          </div>
+        </div>
+
+        <div>
+          <span style="color: var(--text-muted);">Timezone &amp; Coordinates:</span>
+          <div style="font-size: 0.85rem;">
+            Timezone: <code>{{ result.geo_info.timezone }}</code> &bull; Lat/Lon: <code>{{ result.geo_info.lat }}, {{ result.geo_info.lon }}</code>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <p style="color: var(--text-muted); font-size: 0.88rem;">
+        {{ result.geo_info.notice or 'Public Geolocation is only available for globally routable internet IP addresses.' }}
+      </p>
+      {% endif %}
+    </div>
+
+    <!-- DNS Records Card -->
+    <div class="card">
+      <h3 class="card-title" style="margin-bottom: 1.25rem;">📡 DNS Record Resolution</h3>
+      {% if result.dns_records and (result.dns_records.A or result.dns_records.AAAA) %}
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% if result.dns_records.A %}
+        <div>
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-cyan); text-transform: uppercase;">
+            A Records (IPv4):
+          </span>
+          <div style="margin-top: 0.3rem; display: flex; flex-direction: column; gap: 0.3rem;">
+            {% for a in result.dns_records.A %}
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; background: var(--bg-surface-elevated); padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
+                {{ a }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if result.dns_records.AAAA %}
+        <div>
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-purple); text-transform: uppercase;">
+            AAAA Records (IPv6):
+          </span>
+          <div style="margin-top: 0.3rem; display: flex; flex-direction: column; gap: 0.3rem;">
+            {% for aaaa in result.dns_records.AAAA %}
+              <div style="font-family: var(--font-mono); font-size: 0.85rem; background: var(--bg-surface-elevated); padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
+                {{ aaaa }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% else %}
+      <p style="color: var(--text-muted); font-size: 0.88rem;">
+        Direct IP addresses do not perform forward DNS record resolution. Enter a domain name (e.g. <code>google.com</code>) to view A/AAAA resolution records.
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
