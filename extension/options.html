@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CyberSec Shield - Extension Settings</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 2rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #1e293b;
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid #334155;
+    }
+    h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: white;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+    input:focus { outline: none; border-color: #6366f1; }
+    .btn {
+      background: #6366f1;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn:hover { background: #4f46e5; }
+    .status { margin-top: 1rem; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>⚙️ CyberSec Shield Configuration</h2>
+    <p>Configure the connection between your browser extension and the local CyberSec Toolkit Flask instance.</p>
+
+    <div class="form-group">
+      <label for="serverUrl">Toolkit Backend URL</label>
+      <input type="text" id="serverUrl" placeholder="http://localhost:5000">
+    </div>
+
+    <div class="form-group">
+      <label for="apiKey">Auditor API Key (Optional)</label>
+      <input type="text" id="apiKey" placeholder="Copy from your Dashboard">
+    </div>
+
+    <button id="saveBtn" class="btn">Save Configuration</button>
+    <div id="status" class="status"></div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
