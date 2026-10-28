@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}HTTP Security Headers &amp; SSL/TLS Grader &bull; CyberSec Toolkit{% endblock %}
+
+{% block content %}
+<div style="max-width: 1050px; margin: 0 auto;">
+  <div class="page-header">
+    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+      <span class="badge badge-success">Infrastructure Audit</span>
+      <span class="badge badge-info">SSL/TLS 1.3 &bull; HSTS &bull; CSP</span>
+    </div>
+    <h1 class="page-title">HTTP Security Headers &amp; SSL/TLS Grader</h1>
+    <p class="page-subtitle">
+      Deep inspection of defensive HTTP response headers, SSL/TLS handshake security, cipher suites, and certificate validity with A+ to F grading.
+    </p>
+  </div>
+
+  <!-- Tools Quick Switcher Subnav Strip -->
+  <div class="tools-subnav">
+    <a href="{{ url_for('url_scanner.index') }}" class="tools-subnav-btn">
+      <span>🔗</span> URL Phish
+    </a>
+    <a href="{{ url_for('email_analyzer.index') }}" class="tools-subnav-btn">
+      <span>✉️</span> Email Analyzer
+    </a>
+    <a href="{{ url_for('qr_scanner.index') }}" class="tools-subnav-btn">
+      <span>📷</span> Quishing (QR)
+    </a>
+    <a href="{{ url_for('password_checker.index') }}" class="tools-subnav-btn">
+      <span>🔑</span> Passwords
+    </a>
+    <a href="{{ url_for('ssl_headers.index') }}" class="tools-subnav-btn active">
+      <span>🛡️</span> SSL &amp; Headers
+    </a>
+    <a href="{{ url_for('port_scanner.index') }}" class="tools-subnav-btn">
+      <span>🔌</span> Port Audit
+    </a>
+    <a href="{{ url_for('ip_intel.index') }}" class="tools-subnav-btn">
+      <span>🌍</span> IP Intel
+    </a>
+    <a href="{{ url_for('hash_studio.index') }}" class="tools-subnav-btn">
+      <span>⚡</span> Hash Studio
+    </a>
+    <a href="{{ url_for('playbook.index') }}" class="tools-subnav-btn">
+      <span>📘</span> Defense Playbook
+    </a>
+  </div>
+
+  <!-- Input Form -->
+  <div class="card" style="margin-bottom: 2rem;">
+    <form method="POST" action="{{ url_for('ssl_headers.index') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="form-group">
+        <label class="form-label" for="target">Target URL or Hostname</label>
+        <div style="display: flex; gap: 0.6rem;">
+          <input type="text" id="target" name="target" class="form-control"
+                 placeholder="e.g. https://github.com or google.com"
+                 value="{{ target_input }}" required autofocus>
+          <button type="submit" class="btn btn-primary" style="white-space: nowrap; padding: 0 1.6rem;">
+            🔍 Grade Security
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Chips -->
+    <div class="chip-container">
+      <span class="chip-label">Quick Test Targets:</span>
+      <button type="button" class="chip-btn" onclick="document.getElementById('target').value='github.com';">
+        GitHub (A+ Benchmark)
+      </button>
+      <button type="button" class="chip-btn" onclick="document.getElementById('target').value='google.com';">
+        Google
+      </button>
+      <button type="button" class="chip-btn" onclick="document.getElementById('target').value='http://httpforever.com';">
+        Unencrypted HTTP (F Grade)
+      </button>
+    </div>
+  </div>
+
+  {% if result %}
+  <!-- Score & Grade Card -->
+  <div class="card" style="margin-bottom: 2rem; border-top: 5px solid {% if result.grade in ['A+', 'A'] %}var(--accent-emerald){% elif result.grade in ['B', 'C'] %}var(--accent-amber){% else %}var(--accent-rose){% endif %};">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+      <div>
+        <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">
+          Inspected Target
+        </div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; font-family: var(--font-mono); color: var(--text-main); margin-top: 0.2rem;">
+          {{ result.hostname }}
+        </h2>
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">
+          Destination: <code>{{ result.target }}</code> &bull; Port: <code>{{ result.port }}</code>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 2rem;">
+        <div style="text-align: right;">
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">
+            Hardening Score
+          </div>
+          <div style="font-size: 2.8rem; font-weight: 800; line-height: 1; color: var(--text-main); margin-top: 0.2rem;">
+            {{ result.score }}<span style="font-size: 1.2rem; color: var(--text-muted);">/100</span>
+          </div>
+        </div>
+
+        <div style="width: 80px; height: 80px; border-radius: 16px; background: {% if result.grade in ['A+', 'A'] %}var(--accent-emerald-bg){% elif result.grade in ['B', 'C'] %}var(--accent-amber-bg){% else %}var(--accent-rose-bg){% endif %}; border: 2px solid {% if result.grade in ['A+', 'A'] %}var(--accent-emerald){% elif result.grade in ['B', 'C'] %}var(--accent-amber){% else %}var(--accent-rose){% endif %}; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: 800; color: {% if result.grade in ['A+', 'A'] %}var(--accent-emerald-text){% elif result.grade in ['B', 'C'] %}var(--accent-amber-text){% else %}var(--accent-rose-text){% endif %};">
+          {{ result.grade }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Warnings Banner if any -->
+  {% if result.warnings %}
+  <div class="alert alert-warning" style="margin-bottom: 2rem; display: block;">
+    <b>⚠️ Security Advisories:</b>
+    <ul style="margin: 0.5rem 0 0 1.5rem; font-size: 0.85rem;">
+      {% for w in result.warnings %}
+        <li>{{ w }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Grid: SSL Info & Recommendations -->
+  <div class="grid-2" style="margin-bottom: 2rem;">
+    <!-- SSL/TLS Info -->
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 class="card-title">🔒 SSL/TLS Certificate</h3>
+        {% if result.ssl_info.active %}
+          <span class="badge badge-success">{{ result.ssl_info.version or 'Active' }}</span>
+        {% else %}
+          <span class="badge badge-danger">Inactive / Error</span>
+        {% endif %}
+      </div>
+
+      {% if result.ssl_info.active %}
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.88rem;">
+        <div>
+          <span style="color: var(--text-muted);">Protocol &amp; Cipher:</span>
+          <div style="font-family: var(--font-mono); font-weight: 600; color: var(--text-main);">
+            {{ result.ssl_info.version }} &bull; {{ result.ssl_info.cipher or 'Standard' }}
+          </div>
+        </div>
+
+        <div>
+          <span style="color: var(--text-muted);">Issuer:</span>
+          <div style="font-weight: 600; color: var(--text-main);">
+            {{ result.ssl_info.issuer.organizationName or result.ssl_info.issuer.commonName or 'Trusted CA' }}
+          </div>
+        </div>
+
+        <div>
+          <span style="color: var(--text-muted);">Subject (Domain):</span>
+          <div style="font-family: var(--font-mono); font-weight: 600; color: var(--text-main);">
+            {{ result.ssl_info.subject.commonName or result.hostname }}
+          </div>
+        </div>
+
+        <div>
+          <span style="color: var(--text-muted);">Validity Period:</span>
+          <div style="font-size: 0.85rem;">
+            From: <code>{{ result.ssl_info.valid_from }}</code><br/>
+            Until: <code>{{ result.ssl_info.valid_to }}</code>
+          </div>
+        </div>
+
+        {% if result.ssl_info.days_remaining is not none %}
+        <div>
+          <span style="color: var(--text-muted);">Days Remaining:</span>
+          <div style="font-weight: 700; color: {% if result.ssl_info.days_remaining > 30 %}var(--accent-emerald){% elif result.ssl_info.days_remaining > 10 %}var(--accent-amber){% else %}var(--accent-rose){% endif %};">
+            {{ result.ssl_info.days_remaining }} days until expiration
+          </div>
+        </div>
+        {% endif %}
+
+        {% if result.ssl_info.sans %}
+        <div>
+          <span style="color: var(--text-muted);">Subject Alternative Names (SANs):</span>
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem; word-break: break-all;">
+            {{ result.ssl_info.sans | join(', ') }}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% else %}
+        <p style="color: var(--accent-rose); font-size: 0.9rem;">
+          {{ result.ssl_info.error or 'Could not establish an encrypted TLS handshake.' }}
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- Recommendations -->
+    <div class="card">
+      <h3 class="card-title" style="margin-bottom: 1rem;">🛠️ Remediation Plan</h3>
+      {% if result.recommendations %}
+        <ul style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.88rem; color: var(--text-secondary);">
+          {% for rec in result.recommendations %}
+            <li>{{ rec }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div style="text-align: center; padding: 2rem 1rem;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎉</div>
+          <h4 style="font-size: 1.1rem; color: var(--text-main);">Flawless Posture</h4>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;">
+            All defensive HTTP headers are configured with industry best practices!
+          </p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Defensive Headers Table -->
+  <div class="card">
+    <h3 class="card-title" style="margin-bottom: 1.25rem;">📋 Defensive Header Breakdown</h3>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Security Header</th>
+            <th>Status</th>
+            <th>Importance</th>
+            <th>Configured Value</th>
+            <th>Defensive Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in result.headers_audit %}
+          <tr>
+            <td><b>{{ h.name }}</b></td>
+            <td>
+              {% if h.present %}
+                <span class="badge badge-success">Present</span>
+              {% else %}
+                <span class="badge badge-danger">Missing</span>
+              {% endif %}
+            </td>
+            <td>
+              <span class="badge {% if h.importance == 'High' %}badge-danger{% elif h.importance == 'Medium' %}badge-warning{% else %}badge-info{% endif %}">
+                {{ h.importance }}
+              </span>
+            </td>
+            <td>
+              <code style="font-size: 0.8rem; word-break: break-all; max-width: 250px; display: inline-block;">
+                {{ h.value }}
+              </code>
+            </td>
+            <td style="font-size: 0.82rem; color: var(--text-muted);">
+              {{ h.desc }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
