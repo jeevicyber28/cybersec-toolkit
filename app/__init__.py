@@ -36,6 +36,11 @@ def create_app(config_class=Config):
     from app.routes.game import game_bp
     from app.routes.history import history_bp
     from app.routes.api import api_bp
+    from app.routes.ssl_headers import ssl_headers_bp
+    from app.routes.hash_studio import hash_studio_bp
+    from app.routes.port_scanner import port_scanner_bp
+    from app.routes.ip_intel import ip_intel_bp
+    from app.routes.playbook import playbook_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -46,6 +51,11 @@ def create_app(config_class=Config):
     app.register_blueprint(game_bp, url_prefix='/game')
     app.register_blueprint(history_bp, url_prefix='/history')
     app.register_blueprint(api_bp, url_prefix='/api')
+    app.register_blueprint(ssl_headers_bp, url_prefix='/ssl-headers')
+    app.register_blueprint(hash_studio_bp, url_prefix='/hash-studio')
+    app.register_blueprint(port_scanner_bp, url_prefix='/port-scanner')
+    app.register_blueprint(ip_intel_bp, url_prefix='/ip-intel')
+    app.register_blueprint(playbook_bp, url_prefix='/playbook')
 
     # Exempt REST API from CSRF protection for Chrome extension & external callers
     csrf.exempt(api_bp)
