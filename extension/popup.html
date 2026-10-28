@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CyberSec Shield</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="popup-header">
+      <div class="brand">
+        <span class="icon">🛡️</span>
+        <span class="title">CyberSec <b>Shield</b></span>
+      </div>
+      <a href="options.html" target="_blank" class="settings-link" title="Settings">⚙️</a>
+    </div>
+
+    <!-- Active URL -->
+    <div class="url-box" id="activeUrlBox">Detecting tab URL...</div>
+
+    <!-- Verdict & Score -->
+    <div id="verdictCard" class="verdict-card">
+      <div class="score-row">
+        <div>
+          <span id="verdictBadge" class="badge">Auditing...</span>
+          <div id="verdictSub" class="verdict-sub">Connecting to local engine</div>
+        </div>
+        <div class="score-display">
+          <span id="scoreVal">--</span>
+          <span class="score-denom">/100</span>
+        </div>
+      </div>
+
+      <!-- Feature Contributions -->
+      <div id="reasonsSection" style="margin-top: 0.8rem; display: none;">
+        <div class="reasons-title">Top Contributing Risk Signals:</div>
+        <ul id="reasonsList" class="reasons-list"></ul>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="popup-footer">
+      <button id="rescanBtn" class="btn-rescan">🔄 Rescan Tab</button>
+      <a id="dashboardLink" href="http://localhost:5000/dashboard" target="_blank" class="btn-dash">Open Toolkit ➔</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
