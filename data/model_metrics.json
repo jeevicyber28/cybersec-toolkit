@@ -1,0 +1,110 @@
+{
+  "model_name": "Random Forest URL Phishing Classifier",
+  "algorithm": "RandomForestClassifier (n_estimators=100, max_depth=10)",
+  "trained_at": "2026-10-28 05:29:01 UTC",
+  "total_samples": 100,
+  "train_samples": 75,
+  "test_samples": 25,
+  "accuracy": 100.0,
+  "precision": 100.0,
+  "recall": 100.0,
+  "f1_score": 100.0,
+  "confusion_matrix": {
+    "true_negative": 13,
+    "false_positive": 0,
+    "false_negative": 0,
+    "true_positive": 12,
+    "matrix": [
+      [
+        13,
+        0
+      ],
+      [
+        0,
+        12
+      ]
+    ]
+  },
+  "feature_importances": [
+    {
+      "name": "has_https",
+      "label": "HTTPS Protocol Implementation",
+      "importance": 37.44
+    },
+    {
+      "name": "domain_length",
+      "label": "Hostname Length",
+      "importance": 14.01
+    },
+    {
+      "name": "suspicious_tld",
+      "label": "High-Risk / Suspicious TLD",
+      "importance": 12.81
+    },
+    {
+      "name": "hyphen_count",
+      "label": "Hyphen Count",
+      "importance": 9.65
+    },
+    {
+      "name": "num_subdomains",
+      "label": "Subdomain Level Count",
+      "importance": 5.34
+    },
+    {
+      "name": "url_length",
+      "label": "Overall URL Length",
+      "importance": 4.9
+    },
+    {
+      "name": "sensitive_keywords",
+      "label": "Brand / Phishing Lure Keywords",
+      "importance": 3.64
+    },
+    {
+      "name": "dot_count",
+      "label": "Period / Dot Count",
+      "importance": 3.16
+    },
+    {
+      "name": "entropy",
+      "label": "URL Character Shannon Entropy",
+      "importance": 2.78
+    },
+    {
+      "name": "slash_count",
+      "label": "Directory Depth (Slash Count)",
+      "importance": 2.23
+    },
+    {
+      "name": "digit_count",
+      "label": "Total Digits Count",
+      "importance": 1.73
+    },
+    {
+      "name": "has_ip",
+      "label": "Raw IP Address in Hostname",
+      "importance": 1.3
+    },
+    {
+      "name": "is_shortened",
+      "label": "URL Shortener Redirection",
+      "importance": 0.7
+    },
+    {
+      "name": "at_count",
+      "label": "@ Sign Presence (Credential masking)",
+      "importance": 0.32
+    },
+    {
+      "name": "question_count",
+      "label": "Query Parameter Count",
+      "importance": 0.01
+    },
+    {
+      "name": "equal_count",
+      "label": "Key-Value Assignment Count",
+      "importance": 0.0
+    }
+  ]
+}
