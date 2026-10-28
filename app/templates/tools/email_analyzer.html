@@ -3,13 +3,32 @@
 {% block title %}Email Journey &amp; Header Analyzer &bull; CyberSec Toolkit{% endblock %}
 
 {% block content %}
-<div style="max-width: 950px; margin: 0 auto;">
-  <div style="margin-bottom: 2rem;">
-    <span class="badge badge-purple" style="margin-bottom: 0.5rem;">Header Spoofing &bull; MTA Transit Hops &bull; SPF/DKIM/DMARC</span>
-    <h1 style="font-size: 2.2rem; font-weight: 800;">Email Journey &amp; Header Analyzer</h1>
-    <p style="color: var(--text-muted); font-size: 1rem;">
-      Deconstruct raw email headers, verify cryptographic authentication records, trace the physical server hop journey, and expose deceptive links and social engineering tricks.
+<div style="max-width: 1000px; margin: 0 auto;">
+  <div class="page-header">
+    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+      <span class="badge badge-purple">MTA Forensic Analysis</span>
+      <span class="badge badge-info">SPF &bull; DKIM &bull; DMARC</span>
+    </div>
+    <h1 class="page-title">Email Journey &amp; Header Forensic Analyzer</h1>
+    <p class="page-subtitle">
+      Inspects From/Reply-To spoofing, parses SPF/DKIM/DMARC authentication verdicts, and visualizes the hop-by-hop transit journey.
     </p>
+  </div>
+
+  <!-- Tools Quick Switcher Subnav Strip -->
+  <div class="tools-subnav">
+    <a href="{{ url_for('url_scanner.index') }}" class="tools-subnav-btn">
+      <span>🔗</span> URL Phish Scanner
+    </a>
+    <a href="{{ url_for('email_analyzer.index') }}" class="tools-subnav-btn active">
+      <span>✉️</span> Email Analyzer
+    </a>
+    <a href="{{ url_for('qr_scanner.index') }}" class="tools-subnav-btn">
+      <span>📷</span> Quishing (QR) Scanner
+    </a>
+    <a href="{{ url_for('password_checker.index') }}" class="tools-subnav-btn">
+      <span>🔑</span> Password &amp; Breach Audit
+    </a>
   </div>
 
   <!-- Form -->
@@ -18,17 +37,18 @@
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
       <div class="form-group">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-          <label class="form-label" for="raw_email" style="margin-bottom: 0;">Paste Raw Email Headers &amp; Body</label>
-          <div style="display: flex; gap: 0.5rem;">
-            <button type="button" class="btn btn-secondary btn-sm" id="loadPhishBtn">Load Phish Sample</button>
-            <button type="button" class="btn btn-secondary btn-sm" id="loadSafeBtn">Load Safe Sample</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+          <label class="form-label" for="raw_email" style="margin-bottom: 0;">Raw Email Headers &amp; Body Payload</label>
+          <div class="chip-container" style="margin-top: 0;">
+            <span class="chip-label">Test Samples:</span>
+            <button type="button" class="chip-btn" id="loadPhishBtn">🚨 Load Phishing Sample</button>
+            <button type="button" class="chip-btn" id="loadSafeBtn">✅ Load Authentic Sample</button>
           </div>
         </div>
         <textarea id="raw_email" name="raw_email" class="form-control" rows="8" placeholder="Received: from mail.example.com...&#10;From: sender@domain.com&#10;Subject: ..." required>{{ raw_content }}</textarea>
       </div>
 
-      <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.75rem; font-size: 1rem;">
+      <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.75rem;">
         🔍 Analyze Email Journey &amp; Authenticity
       </button>
     </form>
@@ -36,22 +56,22 @@
 
   <!-- Results View -->
   {% if result %}
-  <div class="card" style="margin-bottom: 2.5rem; border-top: 5px solid {% if result.verdict == 'Safe' %}#10b981{% elif result.verdict == 'Suspicious' %}#f59e0b{% else %}#ef4444{% endif %};">
+  <div class="card" style="margin-bottom: 2.5rem; border-top: 5px solid {% if result.verdict == 'Safe' %}var(--accent-emerald){% elif result.verdict == 'Suspicious' %}var(--accent-amber){% else %}var(--accent-rose){% endif %};">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
       <div>
-        <span class="badge badge-{{ result.verdict_class }}" style="font-size: 1rem; padding: 0.4rem 1rem; margin-bottom: 0.5rem;">
+        <span class="badge badge-{{ result.verdict_class }}" style="font-size: 0.9rem; padding: 0.4rem 1rem; margin-bottom: 0.5rem;">
           {{ result.verdict }} Verdict
         </span>
-        <h2 style="font-size: 1.4rem; font-weight: 700; margin-top: 0.4rem;">
+        <h2 style="font-size: 1.35rem; font-weight: 800; margin-top: 0.4rem; color: var(--text-main);">
           {{ result.subject }}
         </h2>
-        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem;">
           <b>From:</b> {{ result.from }} &bull; <b>Date:</b> {{ result.date }}
         </div>
       </div>
       <div style="text-align: right;">
-        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Threat Score</span>
-        <div style="font-size: 2.8rem; font-weight: 800; line-height: 1; color: {% if result.verdict == 'Safe' %}#10b981{% elif result.verdict == 'Suspicious' %}#f59e0b{% else %}#ef4444{% endif %};">
+        <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Calculated Risk</span>
+        <div style="font-size: 3rem; font-weight: 800; line-height: 1; color: {% if result.verdict == 'Safe' %}var(--accent-emerald){% elif result.verdict == 'Suspicious' %}var(--accent-amber){% else %}var(--accent-rose){% endif %}; margin-top: 0.2rem;">
           {{ result.risk_score }}<span style="font-size: 1.2rem; color: var(--text-muted); font-weight: 500;">/100</span>
         </div>
       </div>
@@ -60,9 +80,9 @@
     <!-- 1. Header Spoofing & Mismatch Alerts -->
     {% if result.domain_mismatches %}
       <div class="alert alert-danger" style="display: block; margin-bottom: 1.5rem;">
-        <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">⚠️ Critical Header Mismatches (Spoofing Detected)</h4>
+        <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.4rem;">⚠️ Critical Domain Spoofing Discrepancies</h4>
         {% for m in result.domain_mismatches %}
-          <div style="margin-bottom: 0.4rem; font-size: 0.9rem;">
+          <div style="margin-bottom: 0.3rem; font-size: 0.85rem;">
             &bull; <b>{{ m.type }}:</b> {{ m.detail }}
           </div>
         {% endfor %}
@@ -70,12 +90,12 @@
     {% endif %}
 
     <!-- 2. Authentication Badges (SPF / DKIM / DMARC) -->
-    <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Authentication Verification (SPF / DKIM / DMARC)</h3>
+    <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">Cryptographic Origin Verification</h3>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
       <!-- SPF -->
-      <div style="background: var(--bg-card-hover); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+      <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-weight: 700; font-size: 0.9rem;">SPF Record</span>
+          <span style="font-weight: 700; font-size: 0.9rem;">SPF Alignment</span>
           <span class="badge {% if result.authentication.spf.status|lower == 'pass' %}badge-success{% elif result.authentication.spf.status|lower in ['fail', 'softfail'] %}badge-danger{% else %}badge-warning{% endif %}">
             {{ result.authentication.spf.status }}
           </span>
@@ -86,7 +106,7 @@
       </div>
 
       <!-- DKIM -->
-      <div style="background: var(--bg-card-hover); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+      <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <span style="font-weight: 700; font-size: 0.9rem;">DKIM Signature</span>
           <span class="badge {% if result.authentication.dkim.status|lower == 'pass' %}badge-success{% elif result.authentication.dkim.status|lower in ['fail', 'bad'] %}badge-danger{% else %}badge-warning{% endif %}">
@@ -99,7 +119,7 @@
       </div>
 
       <!-- DMARC -->
-      <div style="background: var(--bg-card-hover); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+      <div style="background: var(--bg-surface-elevated); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <span style="font-weight: 700; font-size: 0.9rem;">DMARC Policy</span>
           <span class="badge {% if result.authentication.dmarc.status|lower == 'pass' %}badge-success{% elif result.authentication.dmarc.status|lower in ['fail', 'reject'] %}badge-danger{% else %}badge-warning{% endif %}">
@@ -113,9 +133,9 @@
     </div>
 
     <!-- 3. Human-Readable Timeline of the Mail's Journey -->
-    <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">🗺️ Human-Readable Timeline of the Mail's Journey</h3>
-    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
-      Trace the step-by-step path this message took across the internet, starting from the originating sender server to the recipient mail server.
+    <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem;">🗺️ Mail Transit Hop Journey Timeline</h3>
+    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+      Reverse-chronological hop chain reconstructed from <code>Received:</code> headers from origin MTA to recipient MX.
     </p>
 
     {% if result.hops %}
@@ -125,16 +145,16 @@
             <div class="timeline-bullet">{{ hop.hop_number }}</div>
             <div class="timeline-content">
               <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                <span style="font-weight: 700; font-size: 0.95rem;">
+                <span style="font-weight: 700; font-size: 0.95rem; color: var(--text-main);">
                   Hop #{{ hop.hop_number }}: {{ hop.from_host }} ➔ {{ hop.by_host }}
                 </span>
-                <span class="badge badge-info" style="font-family: monospace; font-size: 0.8rem;">IP: {{ hop.ip }}</span>
+                <span class="badge badge-info" style="font-family: var(--font-mono); font-size: 0.75rem;">IP: {{ hop.ip }}</span>
               </div>
               <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;">
                 <span>🕒 {{ hop.timestamp }}</span>
                 {% if hop.delay_seconds is not none %}
-                  <span style="margin-left: 0.6rem; color: var(--color-primary); font-weight: 600;">
-                    &bull; Transit delay: {{ hop.delay_seconds }}s
+                  <span style="margin-left: 0.6rem; color: var(--accent-primary); font-weight: 700;">
+                    &bull; Latency: {{ hop.delay_seconds }}s
                   </span>
                 {% endif %}
               </div>
@@ -143,32 +163,29 @@
         {% endfor %}
       </div>
     {% else %}
-      <div class="alert alert-info">No Received: header hops detected in the provided input.</div>
+      <div class="alert alert-info">No Received: MTA headers were identified in the provided snippet.</div>
     {% endif %}
 
     <!-- 4. Deceptive Link Analysis -->
     {% if result.link_mismatches %}
       <div style="margin-top: 2rem;">
-        <h3 style="font-size: 1.15rem; font-weight: 700; color: #ef4444; margin-bottom: 0.5rem;">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--accent-rose); margin-bottom: 0.5rem;">
           🚨 Deceptive Display vs Target Link Mismatches
         </h3>
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.75rem;">
-          These links show a trusted domain in their visible text but secretly route the victim to a different target destination.
-        </p>
         <div class="table-responsive">
           <table class="table">
             <thead>
               <tr>
-                <th>Displayed Text</th>
-                <th>Target URL (Actual Destination)</th>
-                <th>Deception Severity</th>
+                <th>Display Anchor Text</th>
+                <th>Target Destination URL</th>
+                <th>Threat Severity</th>
               </tr>
             </thead>
             <tbody>
               {% for link in result.link_mismatches %}
                 <tr>
                   <td><code>{{ link.display_text }}</code></td>
-                  <td><code style="color: #ef4444;">{{ link.actual_url }}</code></td>
+                  <td><code style="color: var(--accent-rose);">{{ link.actual_url }}</code></td>
                   <td><span class="badge badge-danger">{{ link.risk }}</span></td>
                 </tr>
               {% endfor %}
@@ -182,36 +199,36 @@
     <div class="grid-2" style="margin-top: 2rem;">
       <!-- Urgency Language -->
       <div>
-        <h4 style="font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem;">⚡ Urgency &amp; Coercion Indicators</h4>
+        <h4 style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem;">⚡ Coercion &amp; Urgency Triggers</h4>
         {% if result.urgency_findings %}
           <ul style="list-style: none;">
             {% for item in result.urgency_findings %}
-              <li style="padding: 0.5rem 0.75rem; background: var(--bg-card-hover); border-radius: var(--radius-sm); margin-bottom: 0.4rem; font-size: 0.85rem;">
+              <li style="padding: 0.55rem 0.8rem; background: var(--bg-surface-elevated); border-radius: var(--radius-sm); margin-bottom: 0.4rem; font-size: 0.85rem; border: 1px solid var(--border-subtle);">
                 ⚠️ <b>{{ item.category }}:</b> "<em>{{ item.sample }}</em>"
               </li>
             {% endfor %}
           </ul>
         {% else %}
-          <div style="color: var(--text-muted); font-size: 0.85rem; background: var(--bg-card-hover); padding: 0.8rem; border-radius: var(--radius-sm);">
-            No artificial urgency or threatening language patterns identified.
+          <div style="color: var(--text-muted); font-size: 0.85rem; background: var(--bg-surface-elevated); padding: 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            No artificial deadline threats or coercive language detected.
           </div>
         {% endif %}
       </div>
 
       <!-- Risky Attachments -->
       <div>
-        <h4 style="font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem;">📎 Risky Attachment Detection</h4>
+        <h4 style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem;">📎 Risky Attachment Detection</h4>
         {% if result.risky_attachments %}
           <ul style="list-style: none;">
             {% for att in result.risky_attachments %}
-              <li style="padding: 0.5rem 0.75rem; background: #fff1f2; color: #9f1239; border-radius: var(--radius-sm); margin-bottom: 0.4rem; font-size: 0.85rem;">
+              <li style="padding: 0.55rem 0.8rem; background: var(--accent-rose-bg); color: var(--accent-rose-text); border-radius: var(--radius-sm); margin-bottom: 0.4rem; font-size: 0.85rem; border: 1px solid var(--accent-rose);">
                 🚨 <b>{{ att.filename }}:</b> {{ att.risk }}
               </li>
             {% endfor %}
           </ul>
         {% else %}
-          <div style="color: var(--text-muted); font-size: 0.85rem; background: var(--bg-card-hover); padding: 0.8rem; border-radius: var(--radius-sm);">
-            No dangerous executable or script attachments (.exe, .scr, .vbs) detected.
+          <div style="color: var(--text-muted); font-size: 0.85rem; background: var(--bg-surface-elevated); padding: 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            No high-risk executable or script payloads (.exe, .scr, .vbs) discovered.
           </div>
         {% endif %}
       </div>
