@@ -3,13 +3,32 @@
 {% block title %}URL Phishing Detector &bull; Explainable ML{% endblock %}
 
 {% block content %}
-<div style="max-width: 900px; margin: 0 auto;">
-  <div style="margin-bottom: 2rem;">
-    <span class="badge badge-info" style="margin-bottom: 0.5rem;">Defensive Heuristics + Random Forest ML</span>
-    <h1 style="font-size: 2.2rem; font-weight: 800;">Explainable ML URL Phishing Detector</h1>
-    <p style="color: var(--text-muted); font-size: 1rem;">
-      Analyzes 16 lexical, structural, and behavioral features of target URLs with a transparent explanation of contributing risk factors.
+<div style="max-width: 950px; margin: 0 auto;">
+  <div class="page-header">
+    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+      <span class="badge badge-danger">Explainable AI</span>
+      <span class="badge badge-info">Random Forest Classifier</span>
+    </div>
+    <h1 class="page-title">Explainable ML URL Phishing Detector</h1>
+    <p class="page-subtitle">
+      Inspects 16 structural, lexical, and behavioral URL signals with full attribution telemetry explaining why a link was flagged.
     </p>
+  </div>
+
+  <!-- Tools Quick Switcher Subnav Strip -->
+  <div class="tools-subnav">
+    <a href="{{ url_for('url_scanner.index') }}" class="tools-subnav-btn active">
+      <span>🔗</span> URL Phish Scanner
+    </a>
+    <a href="{{ url_for('email_analyzer.index') }}" class="tools-subnav-btn">
+      <span>✉️</span> Email Analyzer
+    </a>
+    <a href="{{ url_for('qr_scanner.index') }}" class="tools-subnav-btn">
+      <span>📷</span> Quishing (QR) Scanner
+    </a>
+    <a href="{{ url_for('password_checker.index') }}" class="tools-subnav-btn">
+      <span>🔑</span> Password &amp; Breach Audit
+    </a>
   </div>
 
   <!-- Scan Input Form -->
@@ -20,7 +39,7 @@
       <div class="form-group">
         <label class="form-label" for="url">Target URL to Inspect</label>
         <div style="display: flex; gap: 0.6rem;">
-          <input type="text" id="url" name="url" class="form-control" style="font-size: 1.05rem;"
+          <input type="text" id="url" name="url" class="form-control" style="font-size: 1rem;"
                  placeholder="e.g. https://paypal.com.verify-billing-status.xyz/auth/login"
                  value="{{ url_input }}" required autofocus>
           <button type="submit" class="btn btn-primary" style="white-space: nowrap; padding: 0 1.6rem;">
@@ -30,78 +49,78 @@
       </div>
     </form>
 
-    <!-- Quick Sample Buttons for Instant Testing -->
-    <div style="font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-      <span>Try samples:</span>
-      <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('url').value='https://www.google.com';">
+    <!-- Quick Sample Selector Chips -->
+    <div class="chip-container">
+      <span class="chip-label">Quick Test Samples:</span>
+      <button type="button" class="chip-btn" onclick="document.getElementById('url').value='https://www.google.com';">
         ✅ Official Google
       </button>
-      <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('url').value='http://paypal.com.account-verify.xyz/login?token=urgent';">
+      <button type="button" class="chip-btn" onclick="document.getElementById('url').value='http://paypal.com.account-verify.xyz/login?token=urgent';">
         🚨 Subdomain Phish
       </button>
-      <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('url').value='http://192.168.1.100/paypal/login.php?cmd=verify';">
+      <button type="button" class="chip-btn" onclick="document.getElementById('url').value='http://192.168.1.100/paypal/login.php?cmd=verify';">
         ⚠️ Raw IP Address
       </button>
-      <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('url').value='http://paypa1-security-check.com/update-account';">
-        🎯 Typosquat (paypa1)
+      <button type="button" class="chip-btn" onclick="document.getElementById('url').value='http://paypa1-security-check.com/update-account';">
+        🎯 Typosquatting (paypa1)
       </button>
     </div>
   </div>
 
   <!-- Scan Results -->
   {% if result %}
-  <div class="card" style="margin-bottom: 2rem; border-top: 5px solid {% if result.verdict == 'Safe' %}#10b981{% elif result.verdict == 'Suspicious' %}#f59e0b{% else %}#ef4444{% endif %};">
+  <div class="card" style="margin-bottom: 2rem; border-top: 5px solid {% if result.verdict == 'Safe' %}var(--accent-emerald){% elif result.verdict == 'Suspicious' %}var(--accent-amber){% else %}var(--accent-rose){% endif %};">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
       <div>
-        <span class="badge badge-{{ result.verdict_class }}" style="font-size: 1rem; padding: 0.4rem 1rem; margin-bottom: 0.5rem;">
+        <span class="badge badge-{{ result.verdict_class }}" style="font-size: 0.9rem; padding: 0.4rem 1rem; margin-bottom: 0.5rem;">
           {{ result.verdict }} Verdict
         </span>
-        <h2 style="font-size: 1.3rem; font-family: monospace; word-break: break-all; margin-top: 0.4rem;">
+        <h2 style="font-size: 1.25rem; font-family: var(--font-mono); word-break: break-all; margin-top: 0.4rem; color: var(--text-main);">
           {{ result.url }}
         </h2>
       </div>
       <div style="text-align: right;">
-        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Risk Score</span>
-        <div style="font-size: 2.8rem; font-weight: 800; line-height: 1; color: {% if result.verdict == 'Safe' %}#10b981{% elif result.verdict == 'Suspicious' %}#f59e0b{% else %}#ef4444{% endif %};">
+        <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Threat Probability</span>
+        <div style="font-size: 3rem; font-weight: 800; line-height: 1; color: {% if result.verdict == 'Safe' %}var(--accent-emerald){% elif result.verdict == 'Suspicious' %}var(--accent-amber){% else %}var(--accent-rose){% endif %}; margin-top: 0.2rem;">
           {{ result.risk_score }}<span style="font-size: 1.2rem; color: var(--text-muted); font-weight: 500;">/100</span>
         </div>
       </div>
     </div>
 
     <!-- Explainable ML Section: Top Contributing Features Horizontal Bar Chart -->
-    <div style="background: var(--bg-card-hover); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <div style="background: var(--bg-surface-elevated); border-radius: var(--radius-sm); padding: 1.5rem; margin-bottom: 1.75rem; border: 1px solid var(--border-subtle);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;">
         <div>
-          <h3 style="font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem;">
-            📊 Explainable ML: Top Contributing Features
+          <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main);">
+            📊 Top Contributing Risk Factors (Attribution Telemetry)
           </h3>
-          <p style="font-size: 0.85rem; color: var(--text-muted);">
-            Visual attribution showing feature influence calculated from Random Forest model weights.
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Feature impact weights determined by the Random Forest classifier.
           </p>
         </div>
-        <a href="{{ url_for('main.model_info') }}" class="btn btn-secondary btn-sm" style="font-size: 0.8rem;">
-          View Model Info &amp; Metrics ➔
+        <a href="{{ url_for('main.model_info') }}" class="btn btn-secondary btn-sm">
+          Model Metrics &amp; Confusion Matrix ➔
         </a>
       </div>
 
       <!-- Feature Bars -->
-      <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
         {% for item in result.top_contributions %}
           <div class="feature-bar-container">
             <div class="feature-bar-header">
               <span>
                 <b>{{ item.label }}</b> 
                 <span style="color: var(--text-muted); font-weight: 400; margin-left: 0.4rem;">
-                  (Value: <code>{{ item.value }}</code>)
+                  (Observed: <code>{{ item.value }}</code>)
                 </span>
               </span>
               <span>
                 {% if item.direction == 'reduces_risk' %}
-                  <span style="color: #10b981; font-weight: 700;">- Legitimate Indicator</span>
+                  <span style="color: var(--accent-emerald); font-weight: 700;">- Legitimate Signal</span>
                 {% elif item.impact > 0.5 %}
-                  <span style="color: #ef4444; font-weight: 700;">+{{ item.impact }}% Phishing Bias</span>
+                  <span style="color: var(--accent-rose); font-weight: 700;">+{{ item.impact }}% Malicious Bias</span>
                 {% else %}
-                  <span style="color: var(--text-muted);">Neutral Baseline</span>
+                  <span style="color: var(--text-muted);">Baseline Neutral</span>
                 {% endif %}
               </span>
             </div>
@@ -116,58 +135,58 @@
 
     <!-- Complete 16 Features Inspection Table -->
     <details>
-      <summary style="cursor: pointer; font-weight: 700; color: var(--color-primary); padding: 0.5rem 0;">
-        🔬 View Complete 16-Feature Inspection Matrix
+      <summary style="cursor: pointer; font-weight: 700; color: var(--accent-primary); font-size: 0.9rem; padding: 0.4rem 0;">
+        🔬 View Full 16-Feature Lexical &amp; Structural Matrix
       </summary>
       <div class="table-responsive" style="margin-top: 1rem;">
         <table class="table">
           <thead>
             <tr>
-              <th>Feature Category</th>
-              <th>Extracted Value</th>
-              <th>Educational Security Insight</th>
+              <th>Feature Indicator</th>
+              <th>Observed Value</th>
+              <th>Defensive Security Rationale</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><b>HTTPS Implementation</b></td>
-              <td><code>{{ 'Enabled' if result.features.has_https == 1 else 'Missing (HTTP)' }}</code></td>
-              <td>Missing encryption leaves credentials exposed in transit and indicates suspicious staging.</td>
+              <td><code>{{ 'Enabled' if result.features.has_https == 1 else 'Missing (Insecure HTTP)' }}</code></td>
+              <td>Missing transport encryption leaves credentials exposed and signals low-effort phishing staging.</td>
             </tr>
             <tr>
               <td><b>Raw IP Address</b></td>
               <td><code>{{ 'Yes' if result.features.has_ip == 1 else 'No' }}</code></td>
-              <td>Legitimate businesses use verified registered domains, not naked IP addresses.</td>
+              <td>Legitimate businesses operate on authenticated domains; naked IPs are classic evasion indicators.</td>
             </tr>
             <tr>
               <td><b>Subdomain Count</b></td>
-              <td><code>{{ result.features.num_subdomains }}</code></td>
-              <td>Excessive subdomain nesting is commonly used to trick mobile users who cannot see the full domain.</td>
+              <td><code>{{ result.features.num_subdomains }} levels</code></td>
+              <td>Excessive nesting is deployed to deceive mobile users who cannot view truncated address bars.</td>
             </tr>
             <tr>
               <td><b>Suspicious TLD</b></td>
               <td><code>{{ 'Yes' if result.features.suspicious_tld == 1 else 'Standard' }}</code></td>
-              <td>TLDs like .xyz, .top, and .club have high abuse rates for disposable phishing campaigns.</td>
+              <td>TLDs like .xyz, .top, and .club have high abuse rates for short-lived phishing campaigns.</td>
             </tr>
             <tr>
               <td><b>Sensitive Keywords</b></td>
-              <td><code>{{ result.features.sensitive_keywords }} hits</code></td>
-              <td>Keywords like login, verify, and banking in the URL string signal potential credential harvesting.</td>
+              <td><code>{{ result.features.sensitive_keywords }} occurrences</code></td>
+              <td>Keywords like login, verify, and banking in URL strings frequently correlate with credential harvesting.</td>
             </tr>
             <tr>
               <td><b>Shannon Entropy</b></td>
               <td><code>{{ result.features.entropy }} bits</code></td>
-              <td>High randomness in URL characters often indicates automated generation or evasion techniques.</td>
+              <td>Higher randomness indicates algorithmic domain generation (DGA) or obfuscated routing tokens.</td>
             </tr>
             <tr>
               <td><b>URL Shortener</b></td>
               <td><code>{{ 'Yes' if result.features.is_shortened == 1 else 'No' }}</code></td>
-              <td>Shortened URLs hide true destination domains and mask intermediate redirects.</td>
+              <td>Shorteners conceal the true destination host and bypass standard perimeter gateway filters.</td>
             </tr>
             <tr>
               <td><b>Overall Length</b></td>
-              <td><code>{{ result.features.url_length }} chars</code></td>
-              <td>Extended URL strings frequently pack padding parameters to push malicious domains out of view.</td>
+              <td><code>{{ result.features.url_length }} characters</code></td>
+              <td>Extensive URL lengths frequently carry parameter padding designed to hide malicious endpoints.</td>
             </tr>
           </tbody>
         </table>
