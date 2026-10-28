@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Audit History &bull; CyberSec Toolkit{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <span class="badge badge-purple" style="margin-bottom: 0.5rem;">Persistent Audit Database</span>
+      <h1 style="font-size: 2.2rem; font-weight: 800;">Security Scan &amp; Audit History</h1>
+      <p style="color: var(--text-muted); font-size: 1rem;">
+        Complete log of audited assets, risk scores, and threat classifications for <b>{{ current_user.username }}</b>.
+      </p>
+    </div>
+
+    <!-- Export & Clear Actions -->
+    <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+      <a href="{{ url_for('history.export_json') }}" class="btn btn-secondary btn-sm" title="Download raw JSON">
+        📥 Export JSON
+      </a>
+      <a href="{{ url_for('history.export_pdf') }}" class="btn btn-primary btn-sm" title="Download ReportLab Branded PDF">
+        📄 Export Branded PDF
+      </a>
+      {% if scans %}
+        <form method="POST" action="{{ url_for('history.clear_all') }}" style="display: inline;" onsubmit="return confirm('Permanently clear all audit history records?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn btn-danger btn-sm">
+            🗑️ Clear History
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Filters & Search Toolbar -->
+<div class="card" style="margin-bottom: 2rem; padding: 1.25rem;">
+  <form method="GET" action="{{ url_for('history.index') }}" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+    <!-- Tool Type Filter -->
+    <div style="flex: 1; min-width: 180px;">
+      <select name="tool" class="form-control" onchange="this.form.submit()">
+        <option value="all" {% if tool_filter == 'all' %}selected{% endif %}>All Tools</option>
+        <option value="url" {% if tool_filter == 'url' %}selected{% endif %}>URL Phishing Scans</option>
+        <option value="email" {% if tool_filter == 'email' %}selected{% endif %}>Email Analyzers</option>
+        <option value="qr" {% if tool_filter == 'qr' %}selected{% endif %}>QR Quishing Scans</option>
+        <option value="password" {% if tool_filter == 'password' %}selected{% endif %}>Password Audits</option>
+      </select>
+    </div>
+
+    <!-- Verdict Filter -->
+    <div style="flex: 1; min-width: 160px;">
+      <select name="verdict" class="form-control" onchange="this.form.submit()">
+        <option value="all" {% if verdict_filter == 'all' %}selected{% endif %}>All Verdicts</option>
+        <option value="Safe" {% if verdict_filter == 'Safe' %}selected{% endif %}>Safe / Clean</option>
+        <option value="Suspicious" {% if verdict_filter == 'Suspicious' %}selected{% endif %}>Suspicious</option>
+        <option value="Malicious" {% if verdict_filter == 'Malicious' %}selected{% endif %}>Malicious / Pwned</option>
+      </select>
+    </div>
+
+    <!-- Keyword Search -->
+    <div style="flex: 2; min-width: 220px; display: flex; gap: 0.5rem;">
+      <input type="text" name="q" class="form-control" placeholder="Search target or keyword..." value="{{ search_query }}">
+      <button type="submit" class="btn btn-secondary">Filter</button>
+      {% if tool_filter != 'all' or verdict_filter != 'all' or search_query %}
+        <a href="{{ url_for('history.index') }}" class="btn btn-secondary" title="Reset Filters">Reset</a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<!-- Scans Table -->
+{% if scans %}
+  <div class="card" style="padding: 0; overflow: hidden;">
+    <div class="table-responsive">
+      <table class="table" style="margin: 0;">
+        <thead>
+          <tr>
+            <th>Tool</th>
+            <th>Target / Subject</th>
+            <th>Risk Score</th>
+            <th>Verdict</th>
+            <th>Timestamp (UTC)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for scan in scans %}
+            <tr>
+              <td>
+                <span class="badge {% if scan.tool_type == 'url' %}badge-info{% elif scan.tool_type == 'email' %}badge-purple{% elif scan.tool_type == 'qr' %}badge-warning{% else %}badge-success{% endif %}">
+                  {{ scan.tool_type|upper }}
+                </span>
+              </td>
+              <td>
+                <div style="font-family: monospace; font-size: 0.85rem; max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ scan.target }}
+                </div>
+              </td>
+              <td>
+                <span style="font-weight: 700; color: {% if scan.risk_score < 35 %}#10b981{% elif scan.risk_score < 65 %}#f59e0b{% else %}#ef4444{% endif %};">
+                  {{ scan.risk_score|round(1) }}/100
+                </span>
+              </td>
+              <td>
+                <span class="badge {% if 'Safe' in scan.verdict or 'Strong' in scan.verdict %}badge-success{% elif 'Suspicious' in scan.verdict or 'Moderate' in scan.verdict %}badge-warning{% else %}badge-danger{% endif %}">
+                  {{ scan.verdict }}
+                </span>
+              </td>
+              <td style="color: var(--text-muted); font-size: 0.85rem;">
+                {{ scan.created_at.strftime('%Y-%m-%d %H:%M:%S') if scan.created_at else '' }}
+              </td>
+              <td>
+                <form method="POST" action="{{ url_for('history.delete_scan', scan_id=scan.id) }}" style="display: inline;" onsubmit="return confirm('Delete this scan entry?');">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-secondary btn-sm" style="padding: 0.25rem 0.5rem; color: #ef4444;" title="Delete Record">
+                    ✕
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% else %}
+  <div class="card" style="text-align: center; padding: 3rem 1.5rem;">
+    <div style="font-size: 3rem; margin-bottom: 0.75rem;">📋</div>
+    <h3 style="font-size: 1.3rem; font-weight: 700;">No Scan History Records Found</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 500px; margin: 0.5rem auto 1.5rem auto;">
+      {% if search_query or tool_filter != 'all' or verdict_filter != 'all' %}
+        No audits matched your search criteria. Try adjusting or clearing your filters.
+      {% else %}
+        You haven't performed any security scans yet while logged in. Audit a URL or email to build your history!
+      {% endif %}
+    </p>
+    <a href="{{ url_for('url_scanner.index') }}" class="btn btn-primary">
+      Launch URL Phishing Scanner
+    </a>
+  </div>
+{% endif %}
+{% endblock %}
