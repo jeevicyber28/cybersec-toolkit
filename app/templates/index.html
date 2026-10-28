@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}CyberSec Toolkit - Next-Gen Defensive Security Suite{% endblock %}
+
+{% block content %}
+<div style="text-align: center; max-width: 900px; margin: 2rem auto 3.5rem auto;">
+  <span class="badge badge-purple" style="font-size: 0.95rem; padding: 0.4rem 1rem; margin-bottom: 1rem;">
+    🛡️ Advanced Defensive & Educational Security Platform
+  </span>
+  <h1 style="font-size: 3rem; font-weight: 800; line-height: 1.2; margin: 1rem 0; letter-spacing: -0.02em;">
+    Defend, Analyze & Master <br/>
+    <span style="background: linear-gradient(90deg, #6366f1, #06b6d4, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+      Modern Cyber Threat Detection
+    </span>
+  </h1>
+  <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 720px; margin: 0 auto 2rem auto;">
+    Far beyond a basic three-tool suite. Features Explainable ML URL intelligence, header & journey email auditing, QR Quishing defense, Zero-Knowledge k-anonymity breach checking, and gamified phishing awareness.
+  </p>
+  <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.8rem 1.8rem;">
+      📊 View Live Security Dashboard
+    </a>
+    <a href="{{ url_for('game.index') }}" class="btn btn-secondary" style="font-size: 1.05rem; padding: 0.8rem 1.8rem;">
+      🎮 Play Spot the Phish Game
+    </a>
+  </div>
+</div>
+
+<!-- Features Grid -->
+<div style="margin-bottom: 3.5rem;">
+  <h2 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center;">
+    Comprehensive Security Intelligence Modules
+  </h2>
+  <div class="grid-3">
+    <!-- 1. Spot the Phish -->
+    <div class="card">
+      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">🎮</div>
+      <h3 class="card-title">Spot the Phish (Game)</h3>
+      <p class="card-desc">
+        10-round awareness quiz challenging you on real URLs, email snippets, and SMS messages. Complete with streaks, badge rewards, and CSS confetti celebrations.
+      </p>
+      <a href="{{ url_for('game.index') }}" class="btn btn-secondary btn-sm">Launch Quiz ➔</a>
+    </div>
+
+    <!-- 2. Email Analyzer -->
+    <div class="card">
+      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">✉️</div>
+      <h3 class="card-title">Email Journey Analyzer</h3>
+      <p class="card-desc">
+        Inspects From vs Reply-To mismatches, verifies SPF/DKIM/DMARC verdicts, maps hop-by-hop transmission timelines, and detects deceptive links and malicious attachments.
+      </p>
+      <a href="{{ url_for('email_analyzer.index') }}" class="btn btn-secondary btn-sm">Analyze Email ➔</a>
+    </div>
+
+    <!-- 3. Quishing QR Scanner -->
+    <div class="card">
+      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">📷</div>
+      <h3 class="card-title">QR Phishing (Quishing)</h3>
+      <p class="card-desc">
+        Server-side OpenCV QR decoding that isolates target URLs, previews them safely without auto-opening, and executes predictive phishing heuristics.
+      </p>
+      <a href="{{ url_for('qr_scanner.index') }}" class="btn btn-secondary btn-sm">Scan QR Code ➔</a>
+    </div>
+
+    <!-- 4. Password & Breach Checker -->
+    <div class="card">
+      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">🔑</div>
+      <h3 class="card-title">Zero-Knowledge Breach Audit</h3>
+      <p class="card-desc">
+        Uses SHA-1 k-anonymity (transmitting only 5-character prefixes) to check billions of breached passwords without ever exposing your credentials, plus Shannon entropy analysis.
+      </p>
+      <a href="{{ url_for('password_checker.index') }}" class="btn btn-secondary btn-sm">Check Password ➔</a>
+    </div>
+
+    <!-- 5. Explainable ML Phishing -->
+    <div class="card">
+      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">🧠</div>
+      <h3 class="card-title">Explainable ML Phishing</h3>
+      <p class="card-desc">
+        Extracts 16 structural features and generates a dynamic horizontal bar chart showing exactly why a URL was flagged as malicious or legitimate.
+      </p>
+      <a href="{{ url_for('url_scanner.index') }}" class="btn btn-secondary btn-sm">Scan URL ➔</a>
+    </div>
+
+    <!-- 6. Audit History & Reports -->
+    <div class="card">
+      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">📑</div>
+      <h3 class="card-title">Branded PDF Reports</h3>
+      <p class="card-desc">
+        Full SQLite history with search and category filtering, structured JSON exports, and branded PDF audit reports generated via ReportLab.
+      </p>
+      <a href="{{ url_for('history.index') }}" class="btn btn-secondary btn-sm">Audit History ➔</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
