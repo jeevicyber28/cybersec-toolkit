@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard &bull; Combined Safety Score{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em;">Security Operations Dashboard</h1>
+    <p style="color: var(--text-muted); font-size: 1.05rem;">
+      Unified overview of your digital hygiene, recent threat assessments, and security quiz awareness.
+    </p>
+  </div>
+  {% if current_user.is_authenticated %}
+    <div>
+      <span class="badge badge-purple" style="font-size: 0.95rem; padding: 0.4rem 0.9rem;">
+        Rank: <b>{{ current_user.get_badge() }}</b> (Best Score: {{ current_user.get_best_score() }} pts)
+      </span>
+    </div>
+  {% endif %}
+</div>
+
+<!-- Top Stats Grid -->
+<div class="grid-3" style="margin-bottom: 2rem;">
+  <!-- Combined Safety Score -->
+  <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 6px solid {% if metrics.safety_score >= 80 %}#10b981{% elif metrics.safety_score >= 55 %}#f59e0b{% else %}#ef4444{% endif %};">
+    <div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span class="form-label" style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; color: var(--text-muted);">
+          Overall Safety Score
+        </span>
+        <span class="badge {% if metrics.safety_score >= 80 %}badge-success{% elif metrics.safety_score >= 55 %}badge-warning{% else %}badge-danger{% endif %}">
+          {% if metrics.safety_score >= 80 %}Strong Posture{% elif metrics.safety_score >= 55 %}Elevated Risk{% else %}Critical Attention{% endif %}
+        </span>
+      </div>
+      <div style="font-size: 3.5rem; font-weight: 800; margin: 0.5rem 0; color: var(--text-main);">
+        {{ metrics.safety_score }}<span style="font-size: 1.5rem; color: var(--text-muted); font-weight: 500;">/100</span>
+      </div>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-muted);">
+      Weighted composite calculated across URL scans, email journeys, QR detections, and quiz performance.
+    </p>
+  </div>
+
+  <!-- Total Scans Performed -->
+  <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <span class="form-label" style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; color: var(--text-muted);">
+        Audited Asset Scans
+      </span>
+      <div style="font-size: 3.5rem; font-weight: 800; margin: 0.5rem 0; color: var(--text-main);">
+        {{ metrics.total_scans }}
+      </div>
+    </div>
+    <div style="font-size: 0.85rem; color: var(--text-muted); display: flex; gap: 0.8rem;">
+      <span>🔗 URLs: <b>{{ metrics.tool_counts.url }}</b></span>
+      <span>✉️ Mails: <b>{{ metrics.tool_counts.email }}</b></span>
+      <span>📷 QRs: <b>{{ metrics.tool_counts.qr }}</b></span>
+    </div>
+  </div>
+
+  <!-- Quiz Awareness Accuracy -->
+  <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <span class="form-label" style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; color: var(--text-muted);">
+        Phishing Awareness Ratio
+      </span>
+      <div style="font-size: 3.5rem; font-weight: 800; margin: 0.5rem 0; color: var(--color-primary);">
+        {{ metrics.quiz_accuracy }}<span style="font-size: 1.5rem; color: var(--text-muted); font-weight: 500;">%</span>
+      </div>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-muted);">
+      Average accuracy in Spot the Phish games identifying deceptive URLs, emails, and SMS.
+    </p>
+  </div>
+</div>
+
+<!-- Visual Charts Section -->
+<div class="grid-2" style="margin-bottom: 2.5rem;">
+  <!-- Donut Chart: Verdict Distribution -->
+  <div class="card">
+    <h3 class="card-title">🍩 Threat Verdict Distribution</h3>
+    <p class="card-desc">Breakdown of recent scans categorized by risk severity.</p>
+    <div style="height: 260px; position: relative;">
+      <canvas id="verdictDonutChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Weekly Activity Chart -->
+  <div class="card">
+    <h3 class="card-title">📈 7-Day Activity & Safety Trend</h3>
+    <p class="card-desc">Scan volume and average daily safety rating over the last week.</p>
+    <div style="height: 260px; position: relative;">
+      <canvas id="weeklyActivityChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- API Key Management Card for Extension -->
+{% if current_user.is_authenticated %}
+<div class="card" style="margin-bottom: 2.5rem; background: var(--bg-card-hover);">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h3 class="card-title">⚡ Developer & Chrome Extension API Key</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">
+        Authenticate requests from the Chrome Extension or external REST clients via the <code>X-API-Key</code> header.
+      </p>
+    </div>
+    <form method="POST" action="{{ url_for('auth.regenerate_api_key') }}" style="display: inline;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn btn-secondary btn-sm" onclick="return confirm('Regenerating will invalidate your current API key. Proceed?')">
+        🔄 Regenerate Key
+      </button>
+    </form>
+  </div>
+  
+  <div style="display: flex; gap: 0.6rem; margin-top: 1rem; align-items: center;">
+    <input type="text" class="form-control" style="font-family: monospace; font-size: 0.95rem; font-weight: 600;" value="{{ current_user.api_key }}" readonly id="apiKeyInput">
+    <button class="btn btn-primary btn-sm" id="copyKeyBtn" onclick="copyToClipboard('{{ current_user.api_key }}', 'copyKeyBtn')">
+      Copy Key
+    </button>
+  </div>
+</div>
+{% endif %}
+
+<!-- Quick Actions Navigation -->
+<h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 1.25rem;">Quick Security Audits</h3>
+<div class="grid-3">
+  <a href="{{ url_for('url_scanner.index') }}" class="card" style="text-decoration: none; color: inherit;">
+    <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🔗</div>
+    <h4 style="font-weight: 700;">Check URL Phishing</h4>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Run URL through 16 explainable ML heuristic features.</p>
+  </a>
+  <a href="{{ url_for('email_analyzer.index') }}" class="card" style="text-decoration: none; color: inherit;">
+    <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">✉️</div>
+    <h4 style="font-weight: 700;">Analyze Email Headers</h4>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Map server hops, SPF/DKIM authentication, and deceptive links.</p>
+  </a>
+  <a href="{{ url_for('qr_scanner.index') }}" class="card" style="text-decoration: none; color: inherit;">
+    <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">📷</div>
+    <h4 style="font-weight: 700;">Quishing QR Scanner</h4>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">Server-side decode QR codes and isolate target URLs safely.</p>
+  </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const metricsData = {{ metrics|tojson }};
+    initDashboardCharts(metricsData);
+  });
+</script>
+{% endblock %}
