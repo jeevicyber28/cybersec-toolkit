@@ -292,6 +292,25 @@ body {
   z-index: 1100;
 }
 
+.dropdown-panel.megamenu {
+  width: 760px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.megamenu-col {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 1200px) {
+  .dropdown-panel.megamenu {
+    width: 680px;
+  }
+}
+
 .nav-dropdown:hover .dropdown-panel,
 .nav-dropdown.open .dropdown-panel {
   opacity: 1;
