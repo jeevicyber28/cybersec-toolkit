@@ -1,96 +1,258 @@
 {% extends "base.html" %}
 
-{% block title %}CyberSec Toolkit - Next-Gen Defensive Security Suite{% endblock %}
+{% block title %}CyberSec Toolkit &bull; All-in-One Cyber Security Operations Suite{% endblock %}
 
 {% block content %}
-<div style="text-align: center; max-width: 900px; margin: 2rem auto 3.5rem auto;">
-  <span class="badge badge-purple" style="font-size: 0.95rem; padding: 0.4rem 1rem; margin-bottom: 1rem;">
-    🛡️ Advanced Defensive & Educational Security Platform
-  </span>
-  <h1 style="font-size: 3rem; font-weight: 800; line-height: 1.2; margin: 1rem 0; letter-spacing: -0.02em;">
-    Defend, Analyze & Master <br/>
-    <span style="background: linear-gradient(90deg, #6366f1, #06b6d4, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-      Modern Cyber Threat Detection
+<!-- Hero Section -->
+<div style="text-align: center; max-width: 980px; margin: 2rem auto 4rem auto;">
+  <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); padding: 0.4rem 1rem; border-radius: 9999px; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);">
+    <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+    <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">
+      All-in-One Cyber Security Operations Hub &bull; v2.5
+    </span>
+  </div>
+
+  <h1 style="font-size: 3.4rem; font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 1.25rem;">
+    Unified Cyber Defense Suite <br/>
+    <span style="background: linear-gradient(135deg, #6366f1 0%, #06b6d4 50%, #10b981 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+      All Security Tools in One Place
     </span>
   </h1>
-  <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 720px; margin: 0 auto 2rem auto;">
-    Far beyond a basic three-tool suite. Features Explainable ML URL intelligence, header & journey email auditing, QR Quishing defense, Zero-Knowledge k-anonymity breach checking, and gamified phishing awareness.
+
+  <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 780px; margin: 0 auto 2.5rem auto; line-height: 1.6;">
+    An integrated cybersecurity arsenal covering <b>Threat &amp; Phishing Defense</b>, <b>Infrastructure &amp; Network Auditing</b>, <b>Cryptographic Forensics</b>, and <b>Interactive Awareness</b>.
   </p>
+
   <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.8rem 1.8rem;">
-      📊 View Live Security Dashboard
+    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.85rem 2rem;">
+      📊 Security Operations Dashboard
     </a>
-    <a href="{{ url_for('game.index') }}" class="btn btn-secondary" style="font-size: 1.05rem; padding: 0.8rem 1.8rem;">
-      🎮 Play Spot the Phish Game
+    <a href="{{ url_for('game.index') }}" class="btn btn-secondary" style="font-size: 1.05rem; padding: 0.85rem 2rem;">
+      🎮 Spot the Phish Game
+    </a>
+    <a href="{{ url_for('playbook.index') }}" class="btn btn-secondary" style="font-size: 1.05rem; padding: 0.85rem 2rem;">
+      📘 OWASP Defense Playbook
     </a>
   </div>
 </div>
 
-<!-- Features Grid -->
+<!-- Category 1: Threat & Phishing Defense -->
 <div style="margin-bottom: 3.5rem;">
-  <h2 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center;">
-    Comprehensive Security Intelligence Modules
-  </h2>
+  <div style="margin-bottom: 1.5rem;">
+    <span class="badge badge-danger">Domain 1</span>
+    <h2 style="font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; margin-top: 0.3rem;">🎯 Threat &amp; Phishing Defense</h2>
+    <p style="color: var(--text-muted); font-size: 0.92rem;">Advanced machine learning, email header journey forensics, and zero-knowledge privacy.</p>
+  </div>
+
   <div class="grid-3">
-    <!-- 1. Spot the Phish -->
-    <div class="card">
-      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">🎮</div>
-      <h3 class="card-title">Spot the Phish (Game)</h3>
+    <!-- URL Phish -->
+    <a href="{{ url_for('url_scanner.index') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-rose-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        🔗
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">URL Phish Detector</h3>
+        <span class="badge badge-danger">Explainable AI</span>
+      </div>
       <p class="card-desc">
-        10-round awareness quiz challenging you on real URLs, email snippets, and SMS messages. Complete with streaks, badge rewards, and CSS confetti celebrations.
+        Random Forest classifier scoring 16 lexical and structural URL markers with horizontal bar attribution charts.
       </p>
-      <a href="{{ url_for('game.index') }}" class="btn btn-secondary btn-sm">Launch Quiz ➔</a>
-    </div>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        Scan URL ➔
+      </div>
+    </a>
 
-    <!-- 2. Email Analyzer -->
-    <div class="card">
-      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">✉️</div>
-      <h3 class="card-title">Email Journey Analyzer</h3>
+    <!-- Email Analyzer -->
+    <a href="{{ url_for('email_analyzer.index') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-purple-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        ✉️
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">Email Journey Analyzer</h3>
+        <span class="badge badge-purple">Forensics</span>
+      </div>
       <p class="card-desc">
-        Inspects From vs Reply-To mismatches, verifies SPF/DKIM/DMARC verdicts, maps hop-by-hop transmission timelines, and detects deceptive links and malicious attachments.
+        Parses SPF/DKIM/DMARC auth, detects From/Reply-To spoofing, and renders an interactive MTA transit hop timeline.
       </p>
-      <a href="{{ url_for('email_analyzer.index') }}" class="btn btn-secondary btn-sm">Analyze Email ➔</a>
-    </div>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        Analyze Email ➔
+      </div>
+    </a>
 
-    <!-- 3. Quishing QR Scanner -->
-    <div class="card">
-      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">📷</div>
-      <h3 class="card-title">QR Phishing (Quishing)</h3>
+    <!-- Quishing QR -->
+    <a href="{{ url_for('qr_scanner.index') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-amber-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        📷
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">Quishing (QR) Scanner</h3>
+        <span class="badge badge-warning">Zero Auto-Open</span>
+      </div>
       <p class="card-desc">
-        Server-side OpenCV QR decoding that isolates target URLs, previews them safely without auto-opening, and executes predictive phishing heuristics.
+        Server-side OpenCV QR decode with adaptive scaling. Quarantines payloads safely without automatic client execution.
       </p>
-      <a href="{{ url_for('qr_scanner.index') }}" class="btn btn-secondary btn-sm">Scan QR Code ➔</a>
-    </div>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        Decode QR Code ➔
+      </div>
+    </a>
 
-    <!-- 4. Password & Breach Checker -->
-    <div class="card">
-      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">🔑</div>
-      <h3 class="card-title">Zero-Knowledge Breach Audit</h3>
+    <!-- Password Checker -->
+    <a href="{{ url_for('password_checker.index') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-emerald-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        🔑
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">Password &amp; Breach Audit</h3>
+        <span class="badge badge-success">k-Anonymity</span>
+      </div>
       <p class="card-desc">
-        Uses SHA-1 k-anonymity (transmitting only 5-character prefixes) to check billions of breached passwords without ever exposing your credentials, plus Shannon entropy analysis.
+        Zero-knowledge client-side SHA-1 range queries against HaveIBeenPwned plus Shannon entropy and pattern heuristics.
       </p>
-      <a href="{{ url_for('password_checker.index') }}" class="btn btn-secondary btn-sm">Check Password ➔</a>
-    </div>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        Audit Password ➔
+      </div>
+    </a>
 
-    <!-- 5. Explainable ML Phishing -->
-    <div class="card">
-      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">🧠</div>
-      <h3 class="card-title">Explainable ML Phishing</h3>
+    <!-- Game -->
+    <a href="{{ url_for('game.index') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-purple-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        🎮
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">Spot the Phish Game</h3>
+        <span class="badge badge-purple">Awareness</span>
+      </div>
       <p class="card-desc">
-        Extracts 16 structural features and generates a dynamic horizontal bar chart showing exactly why a URL was flagged as malicious or legitimate.
+        10-round interactive game across realistic URLs, phishing emails, and smishing texts with badge rank progression.
       </p>
-      <a href="{{ url_for('url_scanner.index') }}" class="btn btn-secondary btn-sm">Scan URL ➔</a>
-    </div>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        Play Game ➔
+      </div>
+    </a>
 
-    <!-- 6. Audit History & Reports -->
-    <div class="card">
-      <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">📑</div>
-      <h3 class="card-title">Branded PDF Reports</h3>
+    <!-- Model Info -->
+    <a href="{{ url_for('main.model_info') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-cyan-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        🧠
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">Explainable ML Metrics</h3>
+        <span class="badge badge-info">Evaluation</span>
+      </div>
       <p class="card-desc">
-        Full SQLite history with search and category filtering, structured JSON exports, and branded PDF audit reports generated via ReportLab.
+        Confusion matrix, classification metrics (Accuracy, Precision, Recall), and Random Forest feature importance table.
       </p>
-      <a href="{{ url_for('history.index') }}" class="btn btn-secondary btn-sm">Audit History ➔</a>
-    </div>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        View Model Info ➔
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- Category 2: Infrastructure & Network Security -->
+<div style="margin-bottom: 3.5rem;">
+  <div style="margin-bottom: 1.5rem;">
+    <span class="badge badge-info">Domain 2</span>
+    <h2 style="font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; margin-top: 0.3rem;">🌐 Infrastructure, Network &amp; Recon</h2>
+    <p style="color: var(--text-muted); font-size: 0.92rem;">Audit perimeter defenses, socket exposure, TLS certificate validity, and threat intelligence.</p>
+  </div>
+
+  <div class="grid-3">
+    <!-- SSL & Headers -->
+    <a href="{{ url_for('ssl_headers.index') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-emerald-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        🛡️
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">SSL &amp; Security Headers</h3>
+        <span class="badge badge-success">A+ Grader</span>
+      </div>
+      <p class="card-desc">
+        Inspects HSTS, CSP, X-Frame-Options, certificate expiration, cipher suites, and server information disclosure.
+      </p>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        Grade Server ➔
+      </div>
+    </a>
+
+    <!-- Port Scanner -->
+    <a href="{{ url_for('port_scanner.index') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-amber-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        🔌
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">Port &amp; Service Hygiene</h3>
+        <span class="badge badge-warning">Socket Probing</span>
+      </div>
+      <p class="card-desc">
+        Fast, non-intrusive safe TCP socket check on standard ports. Flags legacy cleartext services (Telnet, SMB 445, FTP).
+      </p>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        Audit Ports ➔
+      </div>
+    </a>
+
+    <!-- IP Intel -->
+    <a href="{{ url_for('ip_intel.index') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-cyan-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        🌍
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">IP Threat Intel &amp; DNS</h3>
+        <span class="badge badge-info">Reconnaissance</span>
+      </div>
+      <p class="card-desc">
+        Classifies RFC 1918 private vs public ranges, queries Reverse DNS (PTR), Geo-IP location, ASN, and dynamic DNS risks.
+      </p>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        Look Up IP ➔
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- Category 3: Cryptography & Security Engineering -->
+<div style="margin-bottom: 3.5rem;">
+  <div style="margin-bottom: 1.5rem;">
+    <span class="badge badge-purple">Domain 3</span>
+    <h2 style="font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; margin-top: 0.3rem;">🔐 Cryptography &amp; Defense Engineering</h2>
+    <p style="color: var(--text-muted); font-size: 0.92rem;">Cryptographic hash analysis, file integrity verification, and OWASP Top 10 runbooks.</p>
+  </div>
+
+  <div class="grid-2">
+    <!-- Hash Studio -->
+    <a href="{{ url_for('hash_studio.index') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-purple-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        ⚡
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">Cryptographic Hash Studio &amp; Identifier</h3>
+        <span class="badge badge-purple">Crypto</span>
+      </div>
+      <p class="card-desc">
+        Generate MD5, SHA-256, SHA-512, SHA-3, BLAKE2b digests; auto-identify unknown hashes and verify package integrity against vendor checksums.
+      </p>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        Launch Hash Studio ➔
+      </div>
+    </a>
+
+    <!-- Defense Playbook -->
+    <a href="{{ url_for('playbook.index') }}" class="card card-interactive" style="text-decoration: none; color: inherit;">
+      <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--accent-cyan-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem;">
+        📘
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+        <h3 class="card-title">OWASP Top 10 Defense Playbook</h3>
+        <span class="badge badge-info">Runbooks</span>
+      </div>
+      <p class="card-desc">
+        Side-by-side vulnerable vs remediated code architectures across the OWASP Top 10, incident response triage steps, and CLI cheat sheets.
+      </p>
+      <div style="margin-top: 1.25rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">
+        Open Defense Playbook ➔
+      </div>
+    </a>
   </div>
 </div>
 {% endblock %}
