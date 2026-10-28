@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Cyber Defense Playbook &amp; OWASP Top 10 &bull; CyberSec Toolkit{% endblock %}
+
+{% block content %}
+<div style="max-width: 1100px; margin: 0 auto;">
+  <div class="page-header">
+    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+      <span class="badge badge-purple">Defensive Engineering</span>
+      <span class="badge badge-info">OWASP Top 10 &bull; Incident Response &bull; Hardening</span>
+    </div>
+    <h1 class="page-title">Cyber Defense Playbook &amp; Security Engineering Hub</h1>
+    <p class="page-subtitle">
+      Defensive runbooks, vulnerable vs remediated code architectures across the OWASP Top 10, incident response triage procedures, and essential security CLI commands.
+    </p>
+  </div>
+
+  <!-- Tools Quick Switcher Subnav Strip -->
+  <div class="tools-subnav">
+    <a href="{{ url_for('url_scanner.index') }}" class="tools-subnav-btn">
+      <span>🔗</span> URL Phish
+    </a>
+    <a href="{{ url_for('email_analyzer.index') }}" class="tools-subnav-btn">
+      <span>✉️</span> Email Analyzer
+    </a>
+    <a href="{{ url_for('qr_scanner.index') }}" class="tools-subnav-btn">
+      <span>📷</span> Quishing (QR)
+    </a>
+    <a href="{{ url_for('password_checker.index') }}" class="tools-subnav-btn">
+      <span>🔑</span> Passwords
+    </a>
+    <a href="{{ url_for('ssl_headers.index') }}" class="tools-subnav-btn">
+      <span>🛡️</span> SSL &amp; Headers
+    </a>
+    <a href="{{ url_for('port_scanner.index') }}" class="tools-subnav-btn">
+      <span>🔌</span> Port Audit
+    </a>
+    <a href="{{ url_for('ip_intel.index') }}" class="tools-subnav-btn">
+      <span>🌍</span> IP Intel
+    </a>
+    <a href="{{ url_for('hash_studio.index') }}" class="tools-subnav-btn">
+      <span>⚡</span> Hash Studio
+    </a>
+    <a href="{{ url_for('playbook.index') }}" class="tools-subnav-btn active">
+      <span>📘</span> Defense Playbook
+    </a>
+  </div>
+
+  <!-- Section 1: OWASP Top 10 Code Comparisons -->
+  <div style="margin-bottom: 3.5rem;">
+    <div style="margin-bottom: 1.5rem;">
+      <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);">
+        🛡️ OWASP Top 10 Defensive Engineering
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">
+        Understand real-world exploitation mechanisms and study hardened code implementations.
+      </p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 1.75rem;">
+      {% for item in owasp_items %}
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+          <div>
+            <span style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--accent-primary);">
+              {{ item.id }}
+            </span>
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--text-main); margin-top: 0.2rem;">
+              {{ item.title }}
+            </h3>
+          </div>
+          <span class="badge badge-{{ item.badge_class }}">{{ item.badge }}</span>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem;">
+          {{ item.desc }}
+        </p>
+
+        <!-- Code Grid: Vulnerable vs Remediated -->
+        <div class="grid-2" style="margin-bottom: 1.25rem;">
+          <!-- Vulnerable -->
+          <div style="background: rgba(244, 63, 94, 0.05); border: 1px solid rgba(244, 63, 94, 0.2); border-radius: var(--radius-sm); padding: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-rose); text-transform: uppercase;">
+                ❌ Insecure / Vulnerable Implementation
+              </span>
+            </div>
+            <pre style="font-family: var(--font-mono); font-size: 0.82rem; overflow-x: auto; color: var(--text-main); line-height: 1.45;"><code>{{ item.vulnerable_code }}</code></pre>
+          </div>
+
+          <!-- Remediated -->
+          <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-sm); padding: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-emerald); text-transform: uppercase;">
+                ✅ Hardened / Secure Implementation
+              </span>
+            </div>
+            <pre style="font-family: var(--font-mono); font-size: 0.82rem; overflow-x: auto; color: var(--text-main); line-height: 1.45;"><code>{{ item.secure_code }}</code></pre>
+          </div>
+        </div>
+
+        <!-- Prevention Checklist -->
+        <div style="background: var(--bg-surface-elevated); padding: 1rem 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+          <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">
+            Key Defense Principles:
+          </div>
+          <ul style="padding-left: 1.25rem; font-size: 0.85rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.35rem;">
+            {% for prev in item.prevention %}
+              <li>{{ prev }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Section 2: Incident Response Phases -->
+  <div style="margin-bottom: 3.5rem;">
+    <div style="margin-bottom: 1.5rem;">
+      <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);">
+        🚨 SANS / NIST Incident Response Runbook
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">
+        Standard operational triage workflow for active security events and intrusion breaches.
+      </p>
+    </div>
+
+    <div class="grid-2">
+      {% for step in ir_steps %}
+      <div class="card">
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <div style="font-size: 1.8rem;">{{ step.icon }}</div>
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);">
+              {{ step.phase }}
+            </h3>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.15rem;">
+              {{ step.desc }}
+            </p>
+          </div>
+        </div>
+
+        <ul style="padding-left: 1.25rem; font-size: 0.85rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.45rem; margin-top: 0.75rem;">
+          {% for check in step.checklist %}
+            <li>{{ check }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Section 3: Essential CLI Tools Cheat Sheet -->
+  <div>
+    <div style="margin-bottom: 1.5rem;">
+      <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);">
+        ⚡ Essential Security CLI Command Palette
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">
+        High-utility terminal commands for rapid network triage, certificate debugging, and forensic checks.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 140px;">Tool</th>
+              <th>Command Snippet</th>
+              <th>Operational Purpose</th>
+              <th style="width: 100px;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cli in cli_tools %}
+            <tr>
+              <td><b style="color: var(--accent-primary);">{{ cli.tool }}</b></td>
+              <td>
+                <code style="font-family: var(--font-mono); font-size: 0.82rem; word-break: break-all;">
+                  {{ cli.command }}
+                </code>
+              </td>
+              <td style="font-size: 0.85rem; color: var(--text-secondary);">
+                {{ cli.purpose }}
+              </td>
+              <td>
+                <button type="button" class="btn btn-secondary btn-sm" id="cli-btn-{{ loop.index }}" onclick="copyToClipboard('{{ cli.command }}', 'cli-btn-{{ loop.index }}')">
+                  Copy
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
