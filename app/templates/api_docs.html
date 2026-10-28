@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}REST API Documentation &bull; CyberSec Toolkit{% endblock %}
+
+{% block content %}
+<div style="max-width: 950px; margin: 0 auto;">
+  <div style="margin-bottom: 2rem;">
+    <span class="badge badge-info" style="margin-bottom: 0.5rem;">OpenAPI 3.1 &bull; RESTful Interface</span>
+    <h1 style="font-size: 2.2rem; font-weight: 800;">CyberSec Toolkit REST API Reference</h1>
+    <p style="color: var(--text-muted); font-size: 1rem;">
+      Programmatic access to the phishing detection engine, header deconstructors, and k-anonymity breach auditors for scripts, CI/CD pipelines, and browser extensions.
+    </p>
+  </div>
+
+  <!-- Authentication Callout -->
+  <div class="card" style="margin-bottom: 2rem; border-left: 5px solid var(--color-primary);">
+    <h3 class="card-title">🔑 API Authentication</h3>
+    <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
+      Include your personal API key via the HTTP request header <code>X-API-Key</code> or query parameter <code>?api_key=...</code>.<br/>
+      Authenticated requests are automatically logged to your persistent audit history.
+    </p>
+    {% if current_user.is_authenticated %}
+      <div style="margin-top: 0.75rem; font-size: 0.85rem;">
+        Your API Key: <code style="font-weight: 700;">{{ current_user.api_key }}</code>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Endpoints List -->
+  <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem;">
+    <!-- 1. POST /api/v1/scan-url -->
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <span class="badge badge-success" style="font-weight: 800;">POST</span>
+        <code style="font-size: 1.1rem; font-weight: 700;">/api/v1/scan-url</code>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+        Evaluates a target URL against 16 structural features and returns phishing probability with top contributing feature explanations.
+      </p>
+
+      <div style="background: var(--bg-card-hover); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 0.75rem;">
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.3rem;">REQUEST BODY (JSON)</div>
+        <pre style="margin: 0; font-family: monospace; font-size: 0.85rem;"><code>{
+  "url": "http://paypal.com.verify-billing.xyz/auth/login"
+}</code></pre>
+      </div>
+
+      <div style="background: var(--bg-card-hover); padding: 1rem; border-radius: var(--radius-sm);">
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.3rem;">SUCCESSFUL RESPONSE (200 OK)</div>
+        <pre style="margin: 0; font-family: monospace; font-size: 0.85rem;"><code>{
+  "status": "success",
+  "url": "http://paypal.com.verify-billing.xyz/auth/login",
+  "verdict": "Malicious",
+  "verdict_class": "danger",
+  "risk_score": 88.5,
+  "phishing_probability": 0.885,
+  "top_contributions": [
+    {
+      "feature": "has_https",
+      "label": "HTTPS Protocol Implementation",
+      "impact": 37.4,
+      "direction": "increases_risk"
+    }
+  ]
+}</code></pre>
+      </div>
+    </div>
+
+    <!-- 2. POST /api/v1/scan-email -->
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <span class="badge badge-success" style="font-weight: 800;">POST</span>
+        <code style="font-size: 1.1rem; font-weight: 700;">/api/v1/scan-email</code>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+        Parses raw email headers, SPF/DKIM/DMARC verdicts, server hop timeline, and detects deceptive display links and risky attachments.
+      </p>
+
+      <div style="background: var(--bg-card-hover); padding: 1rem; border-radius: var(--radius-sm);">
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.3rem;">REQUEST BODY (JSON)</div>
+        <pre style="margin: 0; font-family: monospace; font-size: 0.85rem;"><code>{
+  "raw_email": "Received: from mail.evil.ru...\\nFrom: support@paypal.com\\nSubject: Account Suspended"
+}</code></pre>
+      </div>
+    </div>
+
+    <!-- 3. POST /api/v1/scan-qr -->
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <span class="badge badge-success" style="font-weight: 800;">POST</span>
+        <code style="font-size: 1.1rem; font-weight: 700;">/api/v1/scan-qr</code>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+        Decodes uploaded QR code server-side and checks payload for malicious destination URLs.
+      </p>
+
+      <div style="background: var(--bg-card-hover); padding: 1rem; border-radius: var(--radius-sm);">
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.3rem;">MULTIPART FORM DATA</div>
+        <div style="font-size: 0.85rem; font-family: monospace;">qr_image: [binary file (.png, .jpg, .webp, .bmp)]</div>
+      </div>
+    </div>
+
+    <!-- 4. GET /api/v1/pwned-range/<prefix> -->
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <span class="badge badge-info" style="font-weight: 800;">GET</span>
+        <code style="font-size: 1.1rem; font-weight: 700;">/api/v1/pwned-range/{prefix_5}</code>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+        K-Anonymity range endpoint. Takes strictly the first 5 hexadecimal characters of a SHA-1 hash and proxies the HIBP range database response.
+      </p>
+
+      <div style="background: var(--bg-card-hover); padding: 1rem; border-radius: var(--radius-sm);">
+        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.3rem;">EXAMPLE REQUEST</div>
+        <pre style="margin: 0; font-family: monospace; font-size: 0.85rem;"><code>curl -X GET "http://localhost:5000/api/v1/pwned-range/5BAA6"</code></pre>
+      </div>
+    </div>
+
+    <!-- 5. GET /api/v1/safety-score -->
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <span class="badge badge-info" style="font-weight: 800;">GET</span>
+        <code style="font-size: 1.1rem; font-weight: 700;">/api/v1/safety-score</code>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+        Returns composite safety score (0-100), donut threat distribution, and 7-day activity metrics.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
