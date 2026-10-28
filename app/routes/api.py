@@ -151,3 +151,51 @@ def safety_score():
     user = get_request_user()
     metrics = calculate_user_safety_metrics(user.id if user else None)
     return jsonify({'status': 'success', 'metrics': metrics})
+
+@api_bp.route('/v1/scan-ssl-headers', methods=['POST'])
+def scan_ssl_headers_api():
+    from app.services.ssl_headers_service import analyze_headers_and_ssl
+    data = request.get_json(silent=True) or request.form
+    target = data.get('target', '').strip()
+    if not target:
+        return jsonify({'error': 'Missing required parameter: target'}), 400
+    res = analyze_headers_and_ssl(target)
+    return jsonify({'status': 'success', 'data': res})
+
+@api_bp.route('/v1/hash-generate', methods=['POST'])
+def hash_generate_api():
+    from app.services.hash_service import generate_hashes
+    data = request.get_json(silent=True) or request.form
+    text = data.get('text', '')
+    res = generate_hashes(text.encode('utf-8'))
+    return jsonify({'status': 'success', 'hashes': res})
+
+@api_bp.route('/v1/hash-identify', methods=['POST'])
+def hash_identify_api():
+    from app.services.hash_service import identify_hash
+    data = request.get_json(silent=True) or request.form
+    hash_str = data.get('hash', '').strip()
+    if not hash_str:
+        return jsonify({'error': 'Missing required parameter: hash'}), 400
+    res = identify_hash(hash_str)
+    return jsonify({'status': 'success', 'matches': res})
+
+@api_bp.route('/v1/scan-ports', methods=['POST'])
+def scan_ports_api():
+    from app.services.port_scanner_service import audit_host_ports
+    data = request.get_json(silent=True) or request.form
+    host = data.get('host', '').strip()
+    if not host:
+        return jsonify({'error': 'Missing required parameter: host'}), 400
+    res = audit_host_ports(host)
+    return jsonify({'status': 'success', 'data': res})
+
+@api_bp.route('/v1/scan-ip-intel', methods=['POST'])
+def scan_ip_intel_api():
+    from app.services.ip_intel_service import analyze_ip_and_domain
+    data = request.get_json(silent=True) or request.form
+    query = data.get('query', '').strip()
+    if not query:
+        return jsonify({'error': 'Missing required parameter: query'}), 400
+    res = analyze_ip_and_domain(query)
+    return jsonify({'status': 'success', 'data': res})
