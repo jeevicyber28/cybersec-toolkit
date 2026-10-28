@@ -1,4 +1,4 @@
-// Main JavaScript Utilities
+// CyberSec Toolkit Main JavaScript
 document.addEventListener('DOMContentLoaded', () => {
   // Theme Toggle Logic
   const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const getSavedTheme = () => {
     const saved = localStorage.getItem('cybersec_theme');
     if (saved) return saved;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return 'dark';
   };
 
   const applyTheme = (theme) => {
@@ -29,6 +29,36 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggleBtn.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme') || 'light';
       applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+  }
+
+  // Tools Dropdown Click Toggle (for touch/click convenience)
+  const dropdownWrapper = document.getElementById('toolsDropdownWrapper');
+  const dropdownBtn = document.getElementById('toolsDropdownBtn');
+
+  if (dropdownBtn && dropdownWrapper) {
+    dropdownBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownWrapper.classList.toggle('open');
+      const isOpen = dropdownWrapper.classList.contains('open');
+      dropdownBtn.setAttribute('aria-expanded', isOpen);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdownWrapper.contains(e.target)) {
+        dropdownWrapper.classList.remove('open');
+        dropdownBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // Mobile Menu Toggle
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileDrawer = document.getElementById('mobileDrawer');
+
+  if (mobileMenuBtn && mobileDrawer) {
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileDrawer.classList.toggle('open');
     });
   }
 
