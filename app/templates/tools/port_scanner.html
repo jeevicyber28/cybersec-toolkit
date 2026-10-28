@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Network Port &amp; Service Hygiene Auditor &bull; CyberSec Toolkit{% endblock %}
+
+{% block content %}
+<div style="max-width: 1050px; margin: 0 auto;">
+  <div class="page-header">
+    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+      <span class="badge badge-warning">Network Hygiene</span>
+      <span class="badge badge-info">Safe Non-Intrusive TCP Probing</span>
+    </div>
+    <h1 class="page-title">Network Port &amp; Service Hygiene Auditor</h1>
+    <p class="page-subtitle">
+      Conducts safe socket health audits across critical standard ports, measures response latency, and flags exposed legacy cleartext protocols (Telnet, SMB, FTP).
+    </p>
+  </div>
+
+  <!-- Tools Quick Switcher Subnav Strip -->
+  <div class="tools-subnav">
+    <a href="{{ url_for('url_scanner.index') }}" class="tools-subnav-btn">
+      <span>🔗</span> URL Phish
+    </a>
+    <a href="{{ url_for('email_analyzer.index') }}" class="tools-subnav-btn">
+      <span>✉️</span> Email Analyzer
+    </a>
+    <a href="{{ url_for('qr_scanner.index') }}" class="tools-subnav-btn">
+      <span>📷</span> Quishing (QR)
+    </a>
+    <a href="{{ url_for('password_checker.index') }}" class="tools-subnav-btn">
+      <span>🔑</span> Passwords
+    </a>
+    <a href="{{ url_for('ssl_headers.index') }}" class="tools-subnav-btn">
+      <span>🛡️</span> SSL &amp; Headers
+    </a>
+    <a href="{{ url_for('port_scanner.index') }}" class="tools-subnav-btn active">
+      <span>🔌</span> Port Audit
+    </a>
+    <a href="{{ url_for('ip_intel.index') }}" class="tools-subnav-btn">
+      <span>🌍</span> IP Intel
+    </a>
+    <a href="{{ url_for('hash_studio.index') }}" class="tools-subnav-btn">
+      <span>⚡</span> Hash Studio
+    </a>
+    <a href="{{ url_for('playbook.index') }}" class="tools-subnav-btn">
+      <span>📘</span> Defense Playbook
+    </a>
+  </div>
+
+  <!-- Input Card -->
+  <div class="card" style="margin-bottom: 2rem;">
+    <form method="POST" action="{{ url_for('port_scanner.index') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="form-group">
+        <label class="form-label" for="target">Target Hostname or IP Address</label>
+        <div style="display: flex; gap: 0.6rem;">
+          <input type="text" id="target" name="target" class="form-control"
+                 placeholder="e.g. 127.0.0.1 or scanme.nmap.org"
+                 value="{{ target_input }}" required autofocus>
+          <button type="submit" class="btn btn-primary" style="white-space: nowrap; padding: 0 1.6rem;">
+            🔍 Audit Ports
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Chips -->
+    <div class="chip-container">
+      <span class="chip-label">Quick Test Hosts:</span>
+      <button type="button" class="chip-btn" onclick="document.getElementById('target').value='127.0.0.1';">
+        Localhost (127.0.0.1)
+      </button>
+      <button type="button" class="chip-btn" onclick="document.getElementById('target').value='1.1.1.1';">
+        Cloudflare DNS (1.1.1.1)
+      </button>
+      <button type="button" class="chip-btn" onclick="document.getElementById('target').value='scanme.nmap.org';">
+        Nmap Test Server (scanme.nmap.org)
+      </button>
+    </div>
+  </div>
+
+  {% if result and not result.error %}
+  <!-- Score and Summary Card -->
+  <div class="card" style="margin-bottom: 2rem; border-top: 5px solid {% if result.hygiene_score >= 80 %}var(--accent-emerald){% elif result.hygiene_score >= 50 %}var(--accent-amber){% else %}var(--accent-rose){% endif %};">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+      <div>
+        <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">
+          Host Audited
+        </div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; font-family: var(--font-mono); color: var(--text-main); margin-top: 0.2rem;">
+          {{ result.hostname }} <span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">({{ result.ip }})</span>
+        </h2>
+        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">
+          Audited {{ result.total_scanned }} standard service ports &bull; Found <b>{{ result.open_ports_count }} open</b>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 2rem;">
+        <div style="text-align: right;">
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">
+            Network Hygiene Index
+          </div>
+          <div style="font-size: 2.8rem; font-weight: 800; line-height: 1; color: var(--text-main); margin-top: 0.2rem;">
+            {{ result.hygiene_score }}<span style="font-size: 1.2rem; color: var(--text-muted);">/100</span>
+          </div>
+        </div>
+
+        <div style="width: 80px; height: 80px; border-radius: 16px; background: {% if result.hygiene_score >= 80 %}var(--accent-emerald-bg){% elif result.hygiene_score >= 50 %}var(--accent-amber-bg){% else %}var(--accent-rose-bg){% endif %}; border: 2px solid {% if result.hygiene_score >= 80 %}var(--accent-emerald){% elif result.hygiene_score >= 50 %}var(--accent-amber){% else %}var(--accent-rose){% endif %}; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: {% if result.hygiene_score >= 80 %}var(--accent-emerald-text){% elif result.hygiene_score >= 50 %}var(--accent-amber-text){% else %}var(--accent-rose-text){% endif %};">
+          {% if result.hygiene_score >= 80 %}🛡️{% elif result.hygiene_score >= 50 %}⚠️{% else %}🚨{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Critical Findings Alert -->
+  {% if result.critical_findings %}
+  <div class="alert alert-danger" style="margin-bottom: 2rem; display: block;">
+    <b>🚨 Critical Attack Surface Warnings:</b>
+    <ul style="margin: 0.5rem 0 0 1.5rem; font-size: 0.85rem;">
+      {% for cf in result.critical_findings %}
+        <li>
+          <b>Port {{ cf.port }} ({{ cf.service }}):</b> {{ cf.remediation }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Ports Breakdown Table -->
+  <div class="card">
+    <h3 class="card-title" style="margin-bottom: 1.25rem;">🔌 Port Probing Results</h3>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Port &amp; Protocol</th>
+            <th>Service Name</th>
+            <th>Status</th>
+            <th>Latency</th>
+            <th>Risk Exposure</th>
+            <th>Remediation &amp; Hardening</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in result.ports %}
+          <tr style="{% if p.is_open %}background: var(--active-bg);{% endif %}">
+            <td>
+              <b style="font-family: var(--font-mono); font-size: 0.95rem;">{{ p.port }}</b>
+              <span style="color: var(--text-muted); font-size: 0.8rem;">/{{ p.proto }}</span>
+            </td>
+            <td><b>{{ p.service }}</b></td>
+            <td>
+              {% if p.is_open %}
+                <span class="badge badge-success">OPEN</span>
+              {% else %}
+                <span class="badge" style="background: var(--bg-surface-elevated); color: var(--text-muted); border: 1px solid var(--border-subtle);">CLOSED</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if p.latency_ms is not none %}
+                <code>{{ p.latency_ms }} ms</code>
+              {% else %}
+                <span style="color: var(--text-muted);">&mdash;</span>
+              {% endif %}
+            </td>
+            <td>
+              <span class="badge badge-{{ p.risk_class }}">
+                {{ p.risk }}
+              </span>
+            </td>
+            <td style="font-size: 0.82rem; color: var(--text-secondary); max-width: 320px;">
+              {{ p.remediation }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
