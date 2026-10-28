@@ -1,0 +1,338 @@
+[
+  {
+    "id": 1,
+    "type": "url",
+    "difficulty": "easy",
+    "content": "http://192.168.1.105/paypal/signin.php?token=secure",
+    "is_phish": true,
+    "explanation": "Legitimate banking institutions never host authentication pages on raw IP addresses or unencrypted HTTP connections."
+  },
+  {
+    "id": 2,
+    "type": "url",
+    "difficulty": "easy",
+    "content": "https://www.google.com/search?q=cybersecurity+training",
+    "is_phish": false,
+    "explanation": "Official Google search engine URL utilizing HTTPS and google.com's genuine domain."
+  },
+  {
+    "id": 3,
+    "type": "email",
+    "difficulty": "easy",
+    "content": "From: security@netfIix-billing-update.com\nSubject: Account On Hold: Update payment immediately or lose access in 24 hrs!\n\nDear Member, Your card expired. Click here to confirm details now.",
+    "is_phish": true,
+    "explanation": "High-urgency deadline, artificial threat, and an unofficial misspelled domain 'netfIix-billing-update.com'."
+  },
+  {
+    "id": 4,
+    "type": "sms",
+    "difficulty": "easy",
+    "content": "ALERT: Your bank card has been suspended. Tap http://bank-card-unlock.info to restore your funds immediately.",
+    "is_phish": true,
+    "explanation": "Classic smishing text aiming to provoke panic; banks do not send generic SMS links ending in .info."
+  },
+  {
+    "id": 5,
+    "type": "url",
+    "difficulty": "medium",
+    "content": "https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fmail.google.com",
+    "is_phish": false,
+    "explanation": "Authentic Google OAuth sign-in endpoint hosted directly under accounts.google.com."
+  },
+  {
+    "id": 6,
+    "type": "url",
+    "difficulty": "medium",
+    "content": "https://paypal.com.verify-billing-status.xyz/auth/login",
+    "is_phish": true,
+    "explanation": "Subdomain spoofing: 'paypal.com' is just a prefix; the actual root domain is the untrusted 'verify-billing-status.xyz'."
+  },
+  {
+    "id": 7,
+    "type": "email",
+    "difficulty": "medium",
+    "content": "From: hr-payroll@cornpany.com\nSubject: Important: Updated Q4 Direct Deposit Form Attached\n\nPlease find attached the mandatory employee tax adjustment form (payroll_update.xlsm). Enable macros to sign.",
+    "is_phish": true,
+    "explanation": "Look closely at the sender: 'cornpany.com' replaces 'm' with 'rn' (typosquatting), and macro-enabled .xlsm files are notorious malware vectors."
+  },
+  {
+    "id": 8,
+    "type": "sms",
+    "difficulty": "medium",
+    "content": "USPS: We were unable to deliver your package #94001000 due to an incorrect address. Confirm your address here: https://usps-redelivery-post.top",
+    "is_phish": true,
+    "explanation": "The official USPS domain is usps.com. Scammers commonly register .top or .vip domains for parcel fee phishing."
+  },
+  {
+    "id": 9,
+    "type": "email",
+    "difficulty": "easy",
+    "content": "From: notifications@github.com\nSubject: [GitHub] A personal access token has expired\n\nHi @jeevicyber28, your personal access token 'API Key 2025' expired on Oct 24. Review your tokens at https://github.com/settings/tokens.",
+    "is_phish": false,
+    "explanation": "Official GitHub notification containing accurate account context and linking directly to github.com."
+  },
+  {
+    "id": 10,
+    "type": "url",
+    "difficulty": "hard",
+    "content": "https://www.chase.com.security-notice-portal.net/auth",
+    "is_phish": true,
+    "explanation": "Deceptive host structure: chasing trust with 'chase.com' in the subdomain while the true apex domain is 'security-notice-portal.net'."
+  },
+  {
+    "id": 11,
+    "type": "sms",
+    "difficulty": "easy",
+    "content": "22000: Your verification code for Chase Online is 849201. We will NEVER call or text to ask for this code.",
+    "is_phish": false,
+    "explanation": "Legitimate banking 2FA code from a registered 5-digit shortcode, explicitly warning never to share the code."
+  },
+  {
+    "id": 12,
+    "type": "url",
+    "difficulty": "medium",
+    "content": "https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000",
+    "is_phish": false,
+    "explanation": "The official Microsoft Azure Active Directory / Entra ID login portal."
+  },
+  {
+    "id": 13,
+    "type": "email",
+    "difficulty": "hard",
+    "content": "From: \"CEO David Miller\" <david.miller@techcorp-exec.org>\nTo: accounts@techcorp.com\nSubject: Urgent: Confidential acquisition wire transfer\n\nI am currently in board meetings and cannot take calls. Please process a confidential wire of $45,000 to the attached vendor account today. Keep this strictly private.",
+    "is_phish": true,
+    "explanation": "Classic Business Email Compromise (BEC) / CEO Fraud utilizing an external lookalike domain (@techcorp-exec.org) to bypass internal financial controls."
+  },
+  {
+    "id": 14,
+    "type": "url",
+    "difficulty": "easy",
+    "content": "http://apple-id.secure-account-verification-now.live/login",
+    "is_phish": true,
+    "explanation": "Suspicious TLD (.live), unencrypted HTTP, and extreme keyword padding mimicking Apple ID."
+  },
+  {
+    "id": 15,
+    "type": "sms",
+    "difficulty": "medium",
+    "content": "FedEx: Your order was redirected to a local depot. Complete verification fee ($1.50) to release: https://fedx-tracking-delivery.info",
+    "is_phish": true,
+    "explanation": "Typosquatted domain 'fedx' instead of 'fedex' and soliciting small card fee payments to harvest credit card data."
+  },
+  {
+    "id": 16,
+    "type": "url",
+    "difficulty": "hard",
+    "content": "https://www.amazon.com/gp/css/order-history?ref_=nav_orders_first",
+    "is_phish": false,
+    "explanation": "Authentic Amazon account orders page with correct HTTPS certificate and amazon.com domain."
+  },
+  {
+    "id": 17,
+    "type": "email",
+    "difficulty": "easy",
+    "content": "From: winning@intl-lottery-commission.uk\nSubject: CONGRATULATIONS! You won £1,500,000 in the UK National Prize Draw!\n\nProvide your full bank details and passport copy to claim your prize.",
+    "is_phish": true,
+    "explanation": "Advance-fee / lottery scam. You cannot win a lottery you never entered."
+  },
+  {
+    "id": 18,
+    "type": "url",
+    "difficulty": "hard",
+    "content": "https://www.paypal-resolution-center.com/dispute/case92831",
+    "is_phish": true,
+    "explanation": "Hyphenated lookalike domain 'paypal-resolution-center.com' registered by an unauthorized third party rather than paypal.com."
+  },
+  {
+    "id": 19,
+    "type": "sms",
+    "difficulty": "easy",
+    "content": "Mom, I lost my phone! This is my new temporary number. Please WhatsApp me on this number immediately, I have an emergency.",
+    "is_phish": true,
+    "explanation": "The notorious 'Hi Mum / Hi Dad' social engineering scam designed to elicit urgent emergency wire transfers."
+  },
+  {
+    "id": 20,
+    "type": "email",
+    "difficulty": "medium",
+    "content": "From: auto-confirm@amazon.com\nSubject: Your Amazon.com order of 'Sony WH-1000XM5 Headphones' has shipped!\n\nTrack your package in Your Orders at amazon.com/orders.",
+    "is_phish": false,
+    "explanation": "Legitimate automated dispatch notification pointing to official amazon.com account section."
+  },
+  {
+    "id": 21,
+    "type": "url",
+    "difficulty": "medium",
+    "content": "http://user:password@www.secure-chase-bank.com/portal",
+    "is_phish": true,
+    "explanation": "Contains '@' character which disguises the preceding text as credentials while routing to secure-chase-bank.com."
+  },
+  {
+    "id": 22,
+    "type": "url",
+    "difficulty": "hard",
+    "content": "https://github.com/security/advisories/GHSA-9283-x88p",
+    "is_phish": false,
+    "explanation": "Legitimate GitHub Security Advisory URL under github.com."
+  },
+  {
+    "id": 23,
+    "type": "sms",
+    "difficulty": "hard",
+    "content": "Wells Fargo Security: Did you attempt a $490.00 Zelle transfer to 'Alex R.'? Reply YES or NO. (Wells Fargo will never ask for your password or PIN).",
+    "is_phish": false,
+    "explanation": "Legitimate bank fraud verification prompt: simply asks for YES/NO reply and explicit defensive warning."
+  },
+  {
+    "id": 24,
+    "type": "email",
+    "difficulty": "medium",
+    "content": "From: it-support@microsoft-account-team.co\nSubject: Immediate Action Required: Office 365 Password Expires Today\n\nYour password expires in 3 hours. Keep existing password by logging in: http://login-portal-office365.online",
+    "is_phish": true,
+    "explanation": "Microsoft does not send emails threatening password expiration from .co or linking to .online domains."
+  },
+  {
+    "id": 25,
+    "type": "url",
+    "difficulty": "easy",
+    "content": "https://www.faceb00k-login-reset.com/checkpoint",
+    "is_phish": true,
+    "explanation": "Clear typo-squatting with zeros replacing the letter 'o' in 'faceb00k'."
+  },
+  {
+    "id": 26,
+    "type": "email",
+    "difficulty": "hard",
+    "content": "From: billing@zoom.us\nSubject: Your Zoom Pro Subscription Invoice #INV-92841 is Ready\n\nView your invoice in the Zoom web portal: https://zoom.us/account/billing.",
+    "is_phish": false,
+    "explanation": "Authentic Zoom billing notification linking securely to zoom.us."
+  },
+  {
+    "id": 27,
+    "type": "sms",
+    "difficulty": "medium",
+    "content": "IRS Alert: You have an unpaid tax refund of $1,240. Claim your tax refund directly into your account: http://irs-gov-portal.top/claim",
+    "is_phish": true,
+    "explanation": "The IRS never initiates contact with taxpayers by text messages or social media channels."
+  },
+  {
+    "id": 28,
+    "type": "url",
+    "difficulty": "medium",
+    "content": "https://support.apple.com/en-us/HT204145",
+    "is_phish": false,
+    "explanation": "Official Apple Knowledge Base article under support.apple.com."
+  },
+  {
+    "id": 29,
+    "type": "url",
+    "difficulty": "hard",
+    "content": "https://www.netflix.com-browse-movie-catalogue.online/login",
+    "is_phish": true,
+    "explanation": "Hyphenated deception: appending words to 'netflix.com-' before the true apex domain '.online'."
+  },
+  {
+    "id": 30,
+    "type": "email",
+    "difficulty": "easy",
+    "content": "From: Security Team <security-alert@dropbox-storage-notice.club>\nSubject: 3 suspicious file downloads detected on your Dropbox!\n\nReview the quarantined archive: Dropbox_Security_Review.zip.exe",
+    "is_phish": true,
+    "explanation": "Double extension file (.zip.exe) attempting to masquerade as an archive while executing a Windows executable."
+  },
+  {
+    "id": 31,
+    "type": "sms",
+    "difficulty": "hard",
+    "content": "Uber: Your security code is 4921. Never share this code with anyone, including Uber drivers or agents.",
+    "is_phish": false,
+    "explanation": "Legitimate Uber ride or account verification code with strict no-share warning."
+  },
+  {
+    "id": 32,
+    "type": "url",
+    "difficulty": "easy",
+    "content": "http://steamcommunity.com.trade-gift-items.xyz/trade/84920",
+    "is_phish": true,
+    "explanation": "Classic Steam item trading lure hosted under a rogue .xyz domain."
+  },
+  {
+    "id": 33,
+    "type": "url",
+    "difficulty": "medium",
+    "content": "https://stackoverflow.com/questions/5079812/what-is-a-csrf-token",
+    "is_phish": false,
+    "explanation": "Authentic StackOverflow educational question regarding CSRF security."
+  },
+  {
+    "id": 34,
+    "type": "email",
+    "difficulty": "medium",
+    "content": "From: docusign-service@esign-documents-cloud.com\nSubject: Please DocuSign: 2026 Non-Disclosure Agreement (Urgent)\n\nReview document: http://docusign-envelope-review.com/d/8291",
+    "is_phish": true,
+    "explanation": "Legitimate DocuSign emails originate from docusign.net or docusign.com, not unverified generic third-party domains."
+  },
+  {
+    "id": 35,
+    "type": "sms",
+    "difficulty": "medium",
+    "content": "Your Walmart order #8291 has a delivery delay. Schedule new delivery date: http://walmart-delivery-tracker.xyz",
+    "is_phish": true,
+    "explanation": "Unofficial .xyz tracker link attempting to solicit personal data."
+  },
+  {
+    "id": 36,
+    "type": "url",
+    "difficulty": "hard",
+    "content": "https://en.wikipedia.org/wiki/Phishing",
+    "is_phish": false,
+    "explanation": "Official Wikipedia encyclopedia entry on Phishing under wikipedia.org."
+  },
+  {
+    "id": 37,
+    "type": "email",
+    "difficulty": "hard",
+    "content": "From: alerts@notify.wellsfargo.com\nSubject: Daily Account Balance Notice\n\nYour checking account balance is currently below the $100 alert threshold you configured. Log in to your Wells Fargo Mobile app or visit wellsfargo.com to review.",
+    "is_phish": false,
+    "explanation": "Legitimate bank notification from official subdomain notify.wellsfargo.com that does not ask for credentials or link to third parties."
+  },
+  {
+    "id": 38,
+    "type": "url",
+    "difficulty": "medium",
+    "content": "http://instagram.com.profile-verification-badge.club/verify",
+    "is_phish": true,
+    "explanation": "Fake Instagram blue badge verification scheme hosted on .club domain."
+  },
+  {
+    "id": 39,
+    "type": "sms",
+    "difficulty": "easy",
+    "content": "YOU WON $10,000 Walmart Gift Card! Click http://free-gift-card.top/winner to claim before midnight!",
+    "is_phish": true,
+    "explanation": "Glaring scam offering unearned monetary rewards with artificial urgency."
+  },
+  {
+    "id": 40,
+    "type": "url",
+    "difficulty": "easy",
+    "content": "https://www.python.org/downloads/release/python-3120/",
+    "is_phish": false,
+    "explanation": "The official Python Software Foundation distribution portal."
+  },
+  {
+    "id": 41,
+    "type": "email",
+    "difficulty": "hard",
+    "content": "From: security@linkedin.com\nSubject: You appeared in 14 searches this week\n\nSee who searched for you on LinkedIn by logging in at https://www.linkedin.com/me/search-appearances.",
+    "is_phish": false,
+    "explanation": "Legitimate LinkedIn engagement update linking securely to linkedin.com."
+  },
+  {
+    "id": 42,
+    "type": "url",
+    "difficulty": "hard",
+    "content": "http://paypa1-security-check.com/webscr?cmd=_login-run",
+    "is_phish": true,
+    "explanation": "Subtle leetspeak typosquatting replacing lowercase 'l' with the number '1' (paypa1)."
+  }
+]
