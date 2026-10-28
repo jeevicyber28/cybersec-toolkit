@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{% block title %}CyberSec Toolkit{% endblock %} &bull; Defensive Suite</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  {% block extra_css %}{% endblock %}
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <header>
+    <nav class="navbar">
+      <a href="{{ url_for('main.index') }}" class="nav-brand">
+        <span class="brand-icon">🛡️</span>
+        <span>CyberSec<span style="color: var(--color-primary);">Toolkit</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="{{ url_for('main.dashboard') }}" class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}">📊 Dashboard</a></li>
+        <li><a href="{{ url_for('url_scanner.index') }}" class="nav-link {% if request.endpoint == 'url_scanner.index' %}active{% endif %}">🔗 URL Phish</a></li>
+        <li><a href="{{ url_for('email_analyzer.index') }}" class="nav-link {% if request.endpoint == 'email_analyzer.index' %}active{% endif %}">✉️ Email Analyzer</a></li>
+        <li><a href="{{ url_for('qr_scanner.index') }}" class="nav-link {% if request.endpoint == 'qr_scanner.index' %}active{% endif %}">📷 Quishing</a></li>
+        <li><a href="{{ url_for('password_checker.index') }}" class="nav-link {% if request.endpoint == 'password_checker.index' %}active{% endif %}">🔑 Passwords</a></li>
+        <li><a href="{{ url_for('game.index') }}" class="nav-link {% if request.endpoint == 'game.index' %}active{% endif %}">🎮 Spot the Phish</a></li>
+        <li><a href="{{ url_for('main.model_info') }}" class="nav-link {% if request.endpoint == 'main.model_info' %}active{% endif %}">🧠 Model Info</a></li>
+        <li><a href="{{ url_for('history.index') }}" class="nav-link {% if request.endpoint == 'history.index' %}active{% endif %}">📜 History</a></li>
+        <li><a href="{{ url_for('api.docs') }}" class="nav-link {% if request.endpoint == 'api.docs' %}active{% endif %}">⚡ API Docs</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Theme Toggle -->
+        <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Theme (Dark / Light)">
+          <span id="themeIcon">🌙</span>
+          <span id="themeText" style="font-size: 0.85rem; font-weight: 600;">Dark</span>
+        </button>
+
+        {% if current_user.is_authenticated %}
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="badge badge-purple" title="Auditor Account">👤 {{ current_user.username }}</span>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-sm">Logout</a>
+          </div>
+        {% else %}
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-sm">Login</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">Register</a>
+          </div>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container">
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="alert-container">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              <span>{{ message }}</span>
+              <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Educational Footer -->
+  <footer class="footer">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <b>CyberSec Toolkit</b> &bull; Defensive & Educational Cybersecurity Suite
+      </div>
+      <div>
+        <span>Zero-Knowledge &bull; K-Anonymity Verified &bull; Explainable ML Engine</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
